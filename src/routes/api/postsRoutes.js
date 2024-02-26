@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router()
 const uuid = require('uuid');
-const posts = require('../../posts.js');
+const posts = require('../../../posts.js');
 const Joi = require('joi');
-const logger = require('../../middlewares/logger.js');
 
 
-router.get('/',  logger, (req, res) => {
+
+router.get('/', (req, res) => {
     res.json(posts);
 });
 
-router.get('/:id/', logger, (req, res) => {
+router.get('/:id/',(req, res) => {
     const post = posts.filter(post => post.id === parseInt(req.params.id));
     if (post.length === 0) {
         res.status(404).json({error : 'There is no post ID with this number.'});
@@ -20,7 +20,7 @@ router.get('/:id/', logger, (req, res) => {
 });
 
 
-router.post('/', logger, (req, res) => {
+router.post('/', (req, res) => {
     const post = {
         id : uuid.v4(),
         Name : req.body.Name,
@@ -37,9 +37,10 @@ router.post('/', logger, (req, res) => {
     res.send(post);
 });
 
-router.put('/:id', logger, (req, res) => {
+router.put('/:id',(req, res) => {
     const post = posts.find(post => post.id === parseInt(req.params.id));
     const result = validationPost(req.body);
+    console.log(result);
     if(result.error){
         res.status(400).send(result.error.details[0].message);
         return;
@@ -53,7 +54,7 @@ router.put('/:id', logger, (req, res) => {
 
 
 
-router.delete('/:id', logger, (req, res) => {
+router.delete('/:id', (req, res) => {
     const post = posts.find(post => post.id === parseInt(req.params.id));
     if (post){
         const index = posts.indexOf(post);
@@ -68,7 +69,7 @@ function validationPost (posts)  {
     const schema = Joi.object({
         Name : Joi.string().min(3).required(),
         body : Joi.string().required()
-});
+    });
     
     return schema.validate(posts);
     
