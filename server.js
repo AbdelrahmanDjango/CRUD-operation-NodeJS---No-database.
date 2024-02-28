@@ -14,8 +14,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(logger);
-app.use('/api/posts', require('./src/routes/api/postsRoutes.js'));
-app.use('/posts', require('./src/routes/api/postRoutes.js'))
+// app.use('/posts', require('./src/routes/api/postRoutes.js'));
+app.use('/users', require('./src/routes/api/userRoutes.js'));
+app.use('/Posts', require('./src/routes/api/userPostsRoutes.js'));
 app.use(catchError);
 
 db.sequelize.authenticate().then(() =>{
