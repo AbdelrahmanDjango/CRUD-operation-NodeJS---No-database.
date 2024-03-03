@@ -1,6 +1,6 @@
 const DataTypes = require('sequelize');
 module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define('user', {
+    const UserAuth = sequelize.define('auth', {
         id : {
             type : DataTypes.INTEGER, 
             autoIncrement : true, 
@@ -16,13 +16,13 @@ module.exports = (sequelize, Sequelize) => {
         password : {
             type : DataTypes.STRING,
             allowNull : false,
-            unique : false
-        }
+            unique : true
+        },
     });
     sequelize.sync({alter : true}).then(() => {
-        console.log('User table created successfully.')
+        console.log('Auth table created successfully.')
     }).catch((err) => {
         console.log('Server error', err.message)
     });
-    return User;
+    return UserAuth;
 };

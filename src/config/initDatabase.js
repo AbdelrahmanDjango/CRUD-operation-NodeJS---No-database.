@@ -16,9 +16,10 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// import and init post model. 
+// import and init models. 
 db.posts = require('../models/postModel.js')(sequelize, Sequelize);
 db.user = require('../models/userModel.js')(sequelize, Sequelize);
+db.auth = require('../models/loginModel.js')(sequelize, Sequelize);
 
 db.user.hasMany(db.posts);
 db.posts.belongsTo(db.user);
