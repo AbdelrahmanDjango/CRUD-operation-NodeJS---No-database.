@@ -25,8 +25,13 @@ db.sequelize = sequelize;
 // import and init models.
 db.posts = require("../models/postModel.js")(sequelize, Sequelize);
 db.user = require("../models/userModel.js")(sequelize, Sequelize);
-db.auth = require("../models/loginModel.js")(sequelize, Sequelize);
+db.follow = require("../models/followingModel.js")(sequelize, Sequelize);
 
 db.user.hasMany(db.posts);
 db.posts.belongsTo(db.user);
+
+
+db.user.hasMany(db.follow);
+db.follow.belongsTo(db.user);
+
 module.exports = db;

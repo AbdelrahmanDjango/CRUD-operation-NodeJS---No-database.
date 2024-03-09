@@ -21,6 +21,7 @@ router.post("/register", async (req, res) => {
       const hashedPassword = await bcrypt.hash(myPlaintextPassword, saltRounds);
       user.password = hashedPassword;
       user.role = "user";
+      user.privacy = "public"
       await db.user.create(user);
       return res
         .status(200)
@@ -45,11 +46,13 @@ router.post("/register", async (req, res) => {
   }
 });
 
+
 async function validationUser(user) {
   const schema = Joi.object({
     name: Joi.string().min(3).required(),
     email: Joi.string().email().min(3).required(),
     password: Joi.string().required().min(8),
+    role: Joi.string().valid('user', 'guest')
   });
   try {
     return await schema.validateAsync(user);

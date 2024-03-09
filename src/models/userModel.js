@@ -20,7 +20,17 @@ module.exports = (sequelize, Sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    privacy : {
+      type: DataTypes.STRING
+    }
+    
   });
+
+  // sequelize.sync({alter : true}).then(() => {
+  //   console.log('User table created successfully.')
+  // }).catch((err) => {
+  //   console.log('Server error', err.message)
+  // });
 
   return User;
 };

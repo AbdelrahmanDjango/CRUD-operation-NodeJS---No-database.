@@ -1,30 +1,27 @@
 const express = require('express');
 const db = require('../../config/initDatabase');
 const router = express.Router();
+const ensureAuth = require('../../middlewares/auth')
 
 
-router.delete('/delete/:id', async(req, res) => {
+router.delete('/delete', ensureAuth(), async(req, res) => {
     try{
-        const userID = await db.user.findByPk(parseInt(req.params.id));
-        if(userID){
-            const user = await db.auth.findOne({
-                where : {email : userID.email, name : userID.name}
+        const findUser = await db.user.findOne({
+            where : {
+                id : req.user.id
+            }
+        });
+        if(findUser){
+            await db.user.destroy({
+                where : {
+                    id : req.user.id
+                }
             });
-            if(user){
-                await db.user.destroy({
-                    where : {id : parseInt(req.params.id)}
-                });
-                await db.auth.destroy({
-                    where : {email : userID.email, name : userID.name}
-                })
                 return res.status(200).send('User deleted successfully.')
             }else{
-                return res.status(400).send('You\'re not authorization.');
+                return res.status(400).send('User not found.');
             };
-        }else{
-            return res.status(400).json({msg : `There is no user with this ID: ${req.params.id}.`})
-        }
-    }catch(err){
+        }catch(err){
         console.log(err);
         res.send(err.message);
     }

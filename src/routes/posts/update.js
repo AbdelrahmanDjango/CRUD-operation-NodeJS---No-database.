@@ -1,45 +1,41 @@
 const express = require('express');
 const db = require('../../config/initDatabase');
 const Joi = require('joi');
+const ensureAuth = require('../../middlewares/auth');
 const router = express.Router();
 
-router.put('/:id', async (req, res) => {
-    try {
-        const postID = await db.posts.findByPk(parseInt(req.params.id));
-        if(postID){
-            const user = await db.user.findOne({
-                where : {email : req.body.email}
-            });
-            if(user){
-                const post = await validationPost(req.body);
-                if (post.name === user.name && post.email === user.email){
-                    const updatedPost = await db.posts.update(post, {
-                        where: { id: parseInt(req.params.id) }
-                    });
-                    return res.status(200).send(post); 
-                }else{
-                    return res.status(400).json({err : post.error.details[0].message})
-                }
-            }else if(!user || user.email !== req.body.email){
-                return res.status(403).json({
-                    error: 'Permissions not available',
-                    message: 'You do not have the necessary permissions to perform this action.\
-                    Please log in with the valid credential informations.'
-                });
+router.put('/update/:id', ensureAuth(), async(req, res) => {
+    try{
+        const post = await db.posts.findByPk(parseInt(req.params.id));
+        if(!post){
+            return res.status(400).send('Post doen\'t exists.');
+        }
+        const user = await db.user.findOne({
+            where : {
+                id : req.user.id
             }
+        })
+        if(!user){
+            return res.status(403).send('invalid authorization.')
+        };
+        if(user.id === post.userId){
+            const validatedPostData = await validationPost(req.body);
+            await db.posts.update(validatedPostData, {
+                where : {
+                    userId : user.id
+                }
+            });
+            return res.status(200).json({Updated : 'Post updated successfully.', validatedPostData})
         }else{
-            return res.status(400).json({msg : `There is no post with this ID: ${req.params.id}`});
-        }            
+            return res.status(400).send('You can\'t delete post don\'t belongs to you')
+        }
     }catch(err){
         console.log(err);
-        res.send('Server error.')
+        return res.send(err);
     }
-});
-
+})
 async function validationPost(post){
     const schema = Joi.object({
-        name : Joi.string().min(2),
-        email : Joi.string().email().required(),
         body : Joi.string().required()
     });
     try{

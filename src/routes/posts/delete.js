@@ -1,30 +1,38 @@
 const express = require('express');
 const db = require('../../config/initDatabase');
 const router = express.Router();
+const ensureAuth = require('../../middlewares/auth');
 
-
-
-// Here I need to make sure the user he try to delete he is the same user he write post
-// I think it's about sessions...?
-router.delete('/:id', async (req, res) => {
+router.delete('/delete/:id', ensureAuth(), async (req, res) => {
     try{
-        const postID = await db.posts.findByPk(parseInt(req.params.id)); 
-        if(postID){
-            const deletePost = db.posts.destroy({
+        const post = await db.posts.findByPk(parseInt(req.params.id));
+        if(!post){
+            return res.status(400).send('Post doesn\'t exists.')
+        };
+        const user = await db.user.findOne({
+            where : {
+                id : req.user.id
+            }
+        });
+        if(!user){
+            return res.status(403).send("invalid authorization");
+        };
+        if(user.id === post.userId){
+            await db.posts.destroy({
                 where : {
-                    id : parseInt(req.params.id)
+                   userId : user.id 
                 }
-            })
-            res.status(200).send('Post deleted successfully.')
-        }else{
-            res.status(400).json({msg : `There is no post with this ID: ${req.params.id}`});
-        }   
+            });
+            return res.status(200).send('Post deleted successfully.');
+        }
+        else{
+            return res.status(400).send('You can\'t delete post don\'t belongs to you')
+        }
     }catch(err){
         console.log(err);
-        res.send('Server error.')
-            
+        res.send(err);
     }
-});
+})
 
 
 

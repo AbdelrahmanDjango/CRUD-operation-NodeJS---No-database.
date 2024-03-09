@@ -22,9 +22,9 @@ function ensureAuth(givenRoles) {
       }
 
       console.log({ decodedToken });
-      if (!givenRoles.includes(decodedToken.role)) {
-        return res.status(403).send("invalid authorization");
-      }
+      // if (!givenRoles.includes(decodedToken.role)) {
+      //   return res.status(403).send("invalid authorization");
+      // }
       req.user = decodedToken;
 
       next();

@@ -10,7 +10,9 @@ router.post("/login", async (req, res) => {
   try {
     const requestUser = req.body;
     const user = await db.user.findOne({
-      where: { email: requestUser.email },
+      where: {
+         email: requestUser.email 
+      },
     });
 
     if (!user) {
@@ -30,6 +32,8 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(jwtUser, process.env.JWT_SECRET_KEY, {
       expiresIn: "24h",
     });
+
+
 
     return res.status(200).json({
       token,

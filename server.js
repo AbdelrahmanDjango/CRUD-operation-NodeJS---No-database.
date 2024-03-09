@@ -28,8 +28,13 @@ app.use('/users/', require('./src/routes/auth/login.js'));
 app.use('/users/', require('./src/routes/auth/get.js'));
 app.use('/users/', require('./src/routes/auth/update.js'));
 app.use('/users/', require('./src/routes/auth/delete.js'));
-app.use('/users/', require('./src/routes/auth/logout.js'));
-app.use('/users/', require('./src/routes/auth/resetPassword.js'));
+app.use('/users/', require('./src/routes/settings/resetPassword.js'));
+app.use('/users', require('./src/routes/settings/editPrivacy.js'))
+
+// Following && followers routes.
+app.use('/users/', require('./src/routes/followers/userFollow.js'));
+app.use('/users/', require('./src/routes/followers/getFollowing.js'));
+
 app.use(catchError);
 db.sequelize.authenticate().then(() =>{
     console.log('Connection successfully.')
