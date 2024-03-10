@@ -17,11 +17,23 @@ router.put('/privacy', ensureAuth(), async(req, res) => {
         const newPrivacy = await validatePrivacy(req.body);
         if(user.privacy !== newPrivacy.privacy){
 
-            await db.user.update(newPrivacy, {
+            await db.user.update( newPrivacy, {
                 where: {
                     id : req.user.id
                 }
             });
+            const posts = await db.posts.findAll({
+                where : {
+                    userId : req.user.id
+                },
+            })
+            if(posts){
+                await db.posts.update( newPrivacy, {
+                    where : {
+                        userId : parseInt(req.user.id )
+                    },
+                })
+            }
             return res.status(200).send(`Your account is ${newPrivacy.privacy} now.`)
         }else{
             return res.status(200).send('Nothing have changed.')

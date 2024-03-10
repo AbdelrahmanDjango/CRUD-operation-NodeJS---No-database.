@@ -34,6 +34,9 @@ app.use('/users', require('./src/routes/settings/editPrivacy.js'))
 // Following && followers routes.
 app.use('/users/', require('./src/routes/followers/userFollow.js'));
 app.use('/users/', require('./src/routes/followers/getFollowing.js'));
+app.use('/users/', require('./src/routes/followers/userUnfollow.js'));
+app.use('/users/', require('./src/routes/followers/getFollowers.js'));
+
 
 app.use(catchError);
 db.sequelize.authenticate().then(() =>{

@@ -21,7 +21,6 @@ router.get('/:id/following', async(req, res) => {
         ],
         include : [{
             model : db.user, 
-            // as : 'follow',
             attributes : []
         }],
         raw : true,
@@ -30,7 +29,7 @@ router.get('/:id/following', async(req, res) => {
     )
     
     if(!userFollowings.length > 0){
-        return res.status(404).send(`This user not following anyone.`)
+        return res.status(400).send(`This user not following anyone.`)
     };
     
     return res.status(200).json({followings: userFollowings});

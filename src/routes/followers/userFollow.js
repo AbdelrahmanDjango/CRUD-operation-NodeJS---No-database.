@@ -1,6 +1,5 @@
 const express = require("express");
 const db = require("../../config/initDatabase");
-const Joi = require("joi");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
 
@@ -19,8 +18,11 @@ router.post('/follow/:id', ensureAuth(), async (req, res) => {
             },
         ]
         });
-        console.log('Current User:', userToFollow.toJSON());
-        console.log('User to Follow:', user.toJSON());
+        
+        // console.log('Current User:', userToFollow.toJSON());
+        // console.log('User to Follow:', user.toJSON());
+
+
         // userId => the user that I need to follow him (comes from req.params)
         // followId => the user who doing follow (comes from req.user -Authenticated user- )
         const existingFollow = await db.follow.findOne({
