@@ -1,38 +1,33 @@
 const express = require("express");
-const db = require("../../config/initDatabase");
 const Joi = require("joi");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
+const User = require('../../models/userModel');
+const Post = require('../../models/postModel');
+
 
 router.post("/create", ensureAuth(), async (req, res) => {
   try {
-    const user = await db.user.findOne({
-      where: { id: req.user.id },
-      include: [{ model: db.posts }],
-    });
-    if (user.privacy === 'public'){
-      const post = await validationPost(req.body);
-      if (post) {
-          post.privacy = 'public'
-          const savePost = await user.createPost(post);
-          return res.status(200).send(post);
-        } else {
-          return res.status(400).send("Name or email is wrong.");
-        }    
-      }else if(user.privacy === 'private'){
-        const post = await validationPost(req.body);
-        post.privacy = 'private'
-        if(post) {
-            const savePost = await user.createPost(post);
-            return res.status(200).send(post);
-          }else {
-            return res.status(400).send("Name or email is wrong.");
-          }
-        } else {
-          return res.status(400).json({ err: checkUser.error.details[0].message });
-        }
-
-      }catch (err) {
+    
+    const user = await User.findById(req.user.id)
+    if(!user){
+      return res.status(400).send('User not found');
+    }
+    const post = await validationPost(req.body);
+    if (post){
+      const newPost = new Post({
+      body: req.body.body,
+      privacy: user.privacy,
+      userId : user._id,
+      });
+      const savePost = await newPost.save();
+      user.posts = user.posts || [];
+      user.posts.push(savePost);
+      await user.save();
+      return res.status(200).send(savePost);
+    }  
+    
+    }catch (err) {
     console.log(err);
     res.send(err.message);
   }
@@ -40,9 +35,7 @@ router.post("/create", ensureAuth(), async (req, res) => {
 
 async function validationPost(post) {
   const schema = Joi.object({
-    // name: Joi.string().min(2),
-    // email: Joi.string().email().required(),
-    body: Joi.string().required(),
+    body: Joi.string().required().min(1),
   });
   try {
     return await schema.validateAsync(post);

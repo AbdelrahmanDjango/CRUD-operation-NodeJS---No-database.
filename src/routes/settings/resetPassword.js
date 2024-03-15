@@ -1,17 +1,13 @@
 const express = require('express');
-const db = require('../../config/initDatabase');
 const Joi = require('joi');
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const User = require('../../models/userModel')
 
 router.put('/resetpassword/', ensureAuth(), async(req, res)=>{
     try{
-        const user = await db.user.findOne({
-            where : {
-                id : req.user.id
-            }
-        });
+        const user = await User.findById(req.user.id)
         if(user){
             const passwordObject = await validatePassword(req.body)
 
@@ -32,11 +28,7 @@ router.put('/resetpassword/', ensureAuth(), async(req, res)=>{
                 const myPlaintextPassword = req.body.newPassword;
                 const hashedPassword = await bcrypt.hash(myPlaintextPassword, saltRounds);
                 user.password = hashedPassword;
-                await db.user.update({password : hashedPassword}, {
-                    where : {
-                        id : req.user.id
-                    }
-                });
+                await user.save();
                 // where is the target data that I'll replace it with new.
                 console.log(`PASS: ${user.password}`)
                 
@@ -53,7 +45,6 @@ router.put('/resetpassword/', ensureAuth(), async(req, res)=>{
 async function validatePassword(user) {
     const schema = Joi.object({
         password: Joi.string().required().alphanum().min(8).max(30),
-        // .regex(/^(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,30}$/),
         newPassword: Joi.string().required().alphanum().min(8).max(30),
         newPasswordAgain: Joi.string().required().alphanum().min(8).max(30)
     });

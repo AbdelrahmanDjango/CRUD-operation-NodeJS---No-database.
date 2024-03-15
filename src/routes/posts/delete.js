@@ -1,28 +1,21 @@
 const express = require('express');
-const db = require('../../config/initDatabase');
 const router = express.Router();
 const ensureAuth = require('../../middlewares/auth');
+const Post = require('../../models/postModel');
+const User = require('../../models/userModel');
 
 router.delete('/delete/:id', ensureAuth(), async (req, res) => {
     try{
-        const post = await db.posts.findByPk(parseInt(req.params.id));
+        const post = await Post.findById(req.params.id);
         if(!post){
             return res.status(400).send('Post doesn\'t exists.')
         };
-        const user = await db.user.findOne({
-            where : {
-                id : req.user.id
-            }
-        });
+        const user = await User.findById(req.user.id);
         if(!user){
             return res.status(403).send("invalid authorization");
         };
         if(user.id === post.userId){
-            await db.posts.destroy({
-                where : {
-                   userId : user.id 
-                }
-            });
+            await Post.findOneAndDelete({userId : user.id});
             return res.status(200).send('Post deleted successfully.');
         }
         else{

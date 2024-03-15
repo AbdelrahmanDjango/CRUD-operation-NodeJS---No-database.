@@ -1,25 +1,16 @@
-const { DataTypes } = require("sequelize");
-const uuid = require("uuid");
-module.exports = (sequelize, Sequelize) => {
-  const Post = sequelize.define("post", {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    body: {
-      type: DataTypes.STRING,
-    },
-    privacy : {
-      type : DataTypes.STRING,
-    }
+const mongoose = require('mongoose');
 
-  });
-  // sequelize.sync({alter : true}).then(() => {
-  //   console.log('Post table created successfully.')
-  // }).catch((err) => {
-  //   console.log('Server error', err.message)
-  // });
+const postSchema = new mongoose.Schema({
+  body: String,
+  privacy: String,
+  userId:{
+    type: String,
+    ref: 'User',
+  }
+},
+   { timestamps : true} 
+);
 
-  return Post;
-};
+const Post = mongoose.model('posts', postSchema);
+
+module.exports = Post;

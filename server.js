@@ -1,8 +1,10 @@
 const express = require('express');
-const db = require('./src/config/initDatabase.js');
+// const db = require('./src/config/initDatabase.js');
 const logger = require('./src/middlewares/logger.js');
 const catchError = require('./src/middlewares/catchError.js');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv')
 
 const app = express();
 const corsOptions = {
@@ -18,6 +20,7 @@ app.use('/posts', require('./src/routes/posts/create.js'));
 app.use('/posts', require('./src/routes/posts/get.js'));
 app.use('/posts', require('./src/routes/posts/update.js'));
 app.use('/posts', require('./src/routes/posts/delete.js'));
+app.use('/posts', require('./src/routes/posts/postsFollowings.js'));
 
 // User posts route.
 app.use('/users/posts', require('./src/routes/posts/userPostsRoutes.js'));
@@ -35,15 +38,24 @@ app.use('/users', require('./src/routes/settings/editPrivacy.js'))
 app.use('/users/', require('./src/routes/followers/userFollow.js'));
 app.use('/users/', require('./src/routes/followers/getFollowing.js'));
 app.use('/users/', require('./src/routes/followers/userUnfollow.js'));
-app.use('/users/', require('./src/routes/followers/getFollowers.js'));
-
 
 app.use(catchError);
-db.sequelize.authenticate().then(() =>{
-    console.log('Connection successfully.')
-}).catch((err) =>{
+
+
+mongoose.connect(process.env.MONGODB_URI)
+.then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err) => {
     console.log(err);
 });
+
+
+
+// db.sequelize.authenticate().then(() =>{
+//     console.log('Connection successfully.')
+// }).catch((err) =>{
+//     console.log(err);
+// });
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {console.log(`Server running on ${PORT} port.`)});
 
