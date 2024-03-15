@@ -1,1 +1,1 @@
-CRUD operations with Express JS, using sequelize ORM with MySQL database :) 
+[README.md](https://github.com/AbdelrahmanDjango/CRUD-operations-ExpressJS/files/14621245/README.md)
