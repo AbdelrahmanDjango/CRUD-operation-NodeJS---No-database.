@@ -1,3 +1,38 @@
+/**
+ * @swagger
+ * /users/resetpassword:
+ *   put:
+ *     summary: Reset user password
+ *     description: Reset the password of the authenticated user
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 minLength: 8
+ *                 maxLength: 30
+ *               newPassword:
+ *                 type: string
+ *                 minLength: 8
+ *                 maxLength: 30
+ *               newPasswordAgain:
+ *                 type: string
+ *                 minLength: 8
+ *                 maxLength: 30
+ *     responses:
+ *       '200':
+ *         description: Password reset successfully
+ *       '400':
+ *         description: Invalid credentials or new passwords do not match
+ *       '500':
+ *         description: Internal server error
+ */
 const express = require('express');
 const Joi = require('joi');
 const router = express.Router();

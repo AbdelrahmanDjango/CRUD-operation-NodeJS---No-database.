@@ -1,3 +1,31 @@
+/**
+ * @swagger
+ * /posts/followings:
+ *   get:
+ *     summary: Retrieve posts from followed users
+ *     description: Retrieve posts from users followed by the authenticated user
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Posts retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Post_Followings:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Post'
+ *       '400':
+ *         description: No posts found for the followed users
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require('express');
 const Joi = require('joi');
 const ensureAuth = require('../../middlewares/auth');

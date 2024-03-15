@@ -1,3 +1,28 @@
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *     summary: Retrieve public posts
+ *     description: Retrieve a list of public posts
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: A list of public posts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Post'
+ *       '400':
+ *         description: No public posts found
+ *       '401':
+ *         description: Unauthorized - Missing or invalid authentication token
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require('express');
 const router = express.Router();
 const ensureAuth = require('../../middlewares/auth')

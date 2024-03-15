@@ -1,3 +1,35 @@
+/**
+ * @swagger
+ * /posts/{id}:
+ *   get:
+ *     summary: Retrieve user's posts
+ *     description: Retrieve posts of a user by their ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user whose posts are to be retrieved
+ *     responses:
+ *       '200':
+ *         description: User's posts retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Post'
+ *       '400':
+ *         description: User has no posts or account is private
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require('express');
 const Joi = require('joi');
 const ensureAuth = require('../../middlewares/auth');

@@ -1,3 +1,27 @@
+/**
+ * @swagger
+ * /users/follow/{id}:
+ *   post:
+ *     summary: Follow a user
+ *     description: Follow another user by their ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user to follow
+ *     responses:
+ *       '200':
+ *         description: Successfully followed the user
+ *       '400':
+ *         description: User not found, already following the user, or trying to follow oneself
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require("express");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");

@@ -1,3 +1,29 @@
+/**
+ * @swagger
+ * /posts/delete/{id}:
+ *   delete:
+ *     summary: Delete a post
+ *     description: Delete a post by its ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the post to delete
+ *     responses:
+ *       '200':
+ *         description: Post deleted successfully
+ *       '400':
+ *         description: Invalid request or post does not exist
+ *       '403':
+ *         description: Unauthorized - Missing or invalid authentication token
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require('express');
 const router = express.Router();
 const ensureAuth = require('../../middlewares/auth');

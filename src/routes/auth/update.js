@@ -1,3 +1,38 @@
+/**
+ * @swagger
+ * /users/update:
+ *   put:
+ *     summary: Update user information
+ *     description: Update the authenticated user's information
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               bio:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - email
+ *               - bio
+ *     responses:
+ *       '200':
+ *         description: User information updated successfully
+ *       '400':
+ *         description: User not found, failed to update user, or nothing has changed
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require('express');
 const Joi = require('joi');
 const router = express.Router();

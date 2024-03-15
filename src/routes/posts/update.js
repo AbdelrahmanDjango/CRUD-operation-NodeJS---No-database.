@@ -1,3 +1,51 @@
+/**
+ * @swagger
+ * /posts/update/{id}:
+ *   put:
+ *     summary: Update a post
+ *     description: Update a post by its ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the post to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               body:
+ *                 type: string
+ *             required:
+ *               - body
+ *     responses:
+ *       '200':
+ *         description: Post updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Updated:
+ *                   type: string
+ *                   description: Confirmation message
+ *                 validatedPostData:
+ *                   type: object
+ *                   description: Updated post data
+ *       '400':
+ *         description: Invalid request or post does not exist
+ *       '403':
+ *         description: Unauthorized - Invalid authorization
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require('express');
 const Joi = require('joi');
 const ensureAuth = require('../../middlewares/auth');

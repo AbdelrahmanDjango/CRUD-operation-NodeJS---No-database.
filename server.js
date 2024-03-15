@@ -5,11 +5,32 @@ const catchError = require('./src/middlewares/catchError.js');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv')
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const swaggerOptions = {
+  definition :{
+    openapi : "3.0.0",
+    info : {
+      version : "1.0.0",
+      title : "NodeJS API Social Network project.",
+    },
+  }, 
+  
+  apis : ['./src/routes/posts/*.js', 
+  './src/routes/auth/*.js',
+  './src/routes/followers/*.js',
+  './src/routes/settings/*.js',
+]
+}
+
 
 const app = express();
 const corsOptions = {
-    origin : "http://localhost:5000"
+  origin : "http://localhost:5000"
 };
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));

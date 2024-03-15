@@ -1,3 +1,36 @@
+/**
+ * @swagger
+ * /users/{id}/following:
+ *   get:
+ *     summary: Get users followed by a specific user
+ *     description: Retrieve the list of users followed by the specified user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user whose followed users are to be retrieved
+ *     responses:
+ *       '200':
+ *         description: List of users followed by the specified user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 followings:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Follow'
+ *       '400':
+ *         description: No users found that the specified user follows
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require('express');
 const User = require('../../models/userModel');
 const Follow = require('../../models/followModel');

@@ -1,3 +1,30 @@
+/**
+ * @swagger
+ * /users/privacy:
+ *   put:
+ *     summary: Update user privacy settings
+ *     description: Update the privacy settings of the authenticated user
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               privacy:
+ *                 type: string
+ *                 enum: [public, private]
+ *     responses:
+ *       '200':
+ *         description: User privacy settings updated successfully
+ *       '400':
+ *         description: Invalid authorization or invalid privacy value provided
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require('express');
 const Joi = require('joi');
 const router = express.Router();

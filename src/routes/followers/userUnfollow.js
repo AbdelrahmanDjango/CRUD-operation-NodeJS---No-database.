@@ -1,3 +1,27 @@
+/**
+ * @swagger
+ * /users/unfollow/{id}:
+ *   delete:
+ *     summary: Unfollow a user
+ *     description: Unfollow another user by their ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user to unfollow
+ *     responses:
+ *       '200':
+ *         description: Successfully unfollowed the user
+ *       '400':
+ *         description: User not found, already not following the user, or trying to unfollow oneself
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require("express");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");

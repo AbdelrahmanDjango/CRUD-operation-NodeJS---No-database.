@@ -1,3 +1,40 @@
+/**
+ * @swagger
+ * /users/login:
+ *   post:
+ *     summary: User login
+ *     description: Authenticate user with provided credentials and generate JWT token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *             required:
+ *               - email
+ *               - password
+ *     responses:
+ *       '200':
+ *         description: JWT token generated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authentication
+ *       '400':
+ *         description: Invalid credentials
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");

@@ -1,3 +1,20 @@
+/**
+ * @swagger
+ * /users/delete:
+ *   delete:
+ *     summary: Delete user
+ *     description: Delete the authenticated user
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: User deleted successfully
+ *       '400':
+ *         description: User not found or deletion failed
+ *       '500':
+ *         description: Internal server error
+ */
+
 const express = require('express');
 const router = express.Router();
 const ensureAuth = require('../../middlewares/auth')

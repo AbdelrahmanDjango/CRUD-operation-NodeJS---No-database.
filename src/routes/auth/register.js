@@ -1,32 +1,46 @@
-// // password => "asjdhnaskljdnhlashdnlkasd" encryption
-// // "asjdhnaskljdnhlashdnlkasd" => "password" decryption
-// // ("password89");
-// // hashing:
-// // password:djklasbhdkjsa => "hashdsaldhkalsdjsakjdalsdlassa;ldksa;ldkasld" but u cant reverse this process ( hashing will always get the same result)
-// // password:salkdnask => "saldk;asdlls;da;ldksa;ldkasld" but u cant reverse this process ( hashing will always get the same result)
-// // hashdsaldhkalsdjsakjdalsdlas !=? "password"
-
-//   } catch (err) {
-//     console.error(err);
-//     return res.status(500).json({ error: "Internal Server Error" });
-//     // if (err.name === "SequelizeUniqueConstraintError") {
-//     //   const { errors } = err;
-//     //   let errorMessage = "";
-
-//     //   for (const error of errors) {
-//     //     errorMessage += error.message + ", ";
-//     //   }
-
-//     //   console.log({ message: errorMessage });
-//     //   res.json({ error: errorMessage });
-//     // } else {
-//     //   // Handle other errors
-//     //   console.error(err);
-//     //   res.send(err.message);
-//     // }
-//   }
-// });
-
+/**
+ * @swagger
+ * /users/register:
+ *   post:
+ *     summary: User registration
+ *     description: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 minLength: 8
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *     responses:
+ *       '200':
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Created:
+ *                   type: string
+ *                   description: Confirmation message
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
+ *       '400':
+ *         description: Invalid user data
+ *       '500':
+ *         description: Internal server error
+ */
 
 
 const express = require("express");
