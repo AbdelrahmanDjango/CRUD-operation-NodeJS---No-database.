@@ -60,4 +60,6 @@ router.get('/followings/', ensureAuth(), async(req, res) => {
     }
 });
 
+
+
 module.exports = router;

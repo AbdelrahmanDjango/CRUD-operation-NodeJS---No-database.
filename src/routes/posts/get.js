@@ -31,7 +31,7 @@ const User = require('../../models/userModel')
 
 router.get('/', ensureAuth(), async (req, res) => {
     try{
-        const posts = await Post.find({privacy : 'public'})
+        const posts = await Post.find({privacy : 'public'}).sort({createdAt : -1})
         if(!posts || posts.length === 0){
             return res.status(400).json({msg : 'Posts not found.'})
         }else{
@@ -43,5 +43,15 @@ router.get('/', ensureAuth(), async (req, res) => {
         res.send('Server error.')
     }
 });
+
+router.get('/:_id', ensureAuth(), async(req, res) => {
+    try{
+        const post = await Post.findById(req.params._id)
+        return res.status(200).json(post)
+    }catch(err){
+        console.log(err);
+        res.send('post not found')
+    }
+})
 
 module.exports = router;

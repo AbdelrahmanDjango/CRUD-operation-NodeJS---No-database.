@@ -6,6 +6,10 @@ const postSchema = new mongoose.Schema({
   userId:{
     type: String,
     ref: 'User',
+  },
+  name:{
+    type: String,
+    ref: 'User',
   }
 },
    { timestamps : true} 

@@ -46,7 +46,7 @@ router.get('/:id/following', async(req, res) => {
     }
     // This return the users that user in req.params.id follow them.
     // For e.x: users/1/following => Ahmed: following{'Abdelrahman', 'Khlaed', ....}.
-    const userFollowings = await Follow.find({ follower: req.params.id });
+    const userFollowings = await Follow.find({ follower: req.params.id, status: 'accepted'});
     
     if(!userFollowings.length > 0){
         return res.status(400).send(`This user not following anyone.`)

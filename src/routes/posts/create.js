@@ -53,6 +53,7 @@ router.post("/create", ensureAuth(), async (req, res) => {
       const newPost = new Post({
       body: req.body.body,
       privacy: user.privacy,
+      name: user.name,
       userId : user._id,
       });
       const savePost = await newPost.save();
