@@ -1,18 +1,30 @@
 
 # Social network with good features.
-This is a social network project, using JavaScript (Express JS), MongoDB database, and using Auth JWT.
 
-What is the challenge for me in this project -the Junior Challenge-:
 
-The account privacy feature leads to changing the entire structure of the project, as if the account is private, its posts will be private, and vice versa.
 
-This also affects the follower system. If you try to access a private account or its posts, you will have to follow it first.
+🌟 Project Description:
+
+I developed a social networking platform using Node.js, Express, and MongoDB. The project features a robust authentication system allowing users to create accounts, log in, and obtain tokens for accessing platform features like following other users and posting content.
+
+Users can customize the privacy settings of their accounts, choosing between public and private modes. By default, accounts are public, ensuring immediate visibility of posts and profile information. For enhanced privacy, users can switch accounts to private mode.
+
+In private mode, users must send follow requests to access private posts. The account owner can accept or reject follow requests based on their preferences.
+
+I implemented JWT-based authentication to ensure secure token issuance for user authentication. Additionally, I employed password hashing techniques to safeguard user credentials. As an added security measure, I developed middleware functions to track user activity and manage unauthorized endpoint requests.
+
+I implemented JWT-based authentication to ensure secure token issuance for user authentication. Additionally, I created middleware functions to track user activity, allowing developers to monitor the HTTP request methods and endpoint URLs accessed by users, along with timestamps indicating when the requests were made. This provides valuable insights into user behavior and enables developers to analyze user interactions with the platform.
+
+One challenge was implementing private accounts and managing post privacy settings. I devised a system to automatically adjust post privacy when account settings change and filter data for pending follow requests.
+
+I oversaw the project, structured its architecture, designed the database schema, and implemented the endpoints. Collaboration with an engineer helped me grasp tokens and authentication, facilitating project completion.
+
+Currently, the project focuses on backend development, with frontend implementation pending. For future enhancements, I aim to introduce a chat feature for user interaction.
 
 ### Getting started
 To start using the project, you must follow these steps:
-1) Create a register using name, email, password, role, and bio. They will be overridden with default values until the user changes them.
-
-2) Create a login with the same data to take the token, and from here we can use the rest of the features.
+1) Create a register using name, email, password.
+2) Login with the same data to take the token, and from here we can use the rest of the features.
 
 ### Prerequisites
 What things you need to install the software and how to install them:
@@ -30,104 +42,4 @@ What things you need to install the software and how to install them:
 
 
 # API Reference
-
-NodeJS API Social Network project.
- 1.0.0 
-OAS 3.0
-default
-
-
-POST
-/posts/create
-Create a new post
-
-
-
-DELETE
-/posts/delete/{id}
-Delete a post
-
-
-
-GET
-/posts
-Retrieve public posts
-
-
-
-GET
-/posts/followings
-Retrieve posts from followed users
-
-
-
-PUT
-/posts/update/{id}
-Update a post
-
-
-
-GET
-/posts/{id}
-Retrieve user's posts
-
-
-
-DELETE
-/users/delete
-Delete user
-
-
-
-GET
-/users
-Retrieve all users
-
-
-GET
-/users/{id}
-Retrieve a user by ID
-
-
-POST
-/users/login
-User login
-
-
-POST
-/users/register
-User registration
-
-
-PUT
-/users/update
-Update user information
-
-
-
-GET
-/users/{id}/following
-Get users followed by a specific user
-
-
-POST
-/users/follow/{id}
-Follow a user
-
-
-
-DELETE
-/users/unfollow/{id}
-Unfollow a user
-
-
-
-PUT
-/users/privacy
-Update user privacy settings
-
-
-
-PUT
-/users/resetpassword
-Reset user password
+http://localhost:5000/api-docs/
