@@ -1,12 +1,8 @@
 const mongoose = require('mongoose');
 
 const followSchema = new mongoose.Schema({
-  user:  String, 
+  user:  { type: String, ref: 'User' },
   follower: { type: String, ref: 'User' },
-  name:{
-    type: String,
-    ref: 'User',
-  },
   status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'accepted' }
 
 });

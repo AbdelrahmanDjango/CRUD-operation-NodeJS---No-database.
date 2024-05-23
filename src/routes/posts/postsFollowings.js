@@ -35,7 +35,7 @@ const Follow = require('../../models/followModel');
 const router = express.Router();
 
 
-router.get('/followings/', ensureAuth(), async(req, res) => {
+router.get('/', ensureAuth(), async(req, res) => {
     try{
         const user = await User.findById(req.user.id);
         if(!user){
@@ -43,11 +43,11 @@ router.get('/followings/', ensureAuth(), async(req, res) => {
         };
         const userFollowings = await Follow.find({follower : req.user.id})
         if(!userFollowings.length > 0){
-            return res.status(400).send(`This user not following anyone.`)
+            return res.status(400).send(`You are not following anyone.`)
         };
         const followingIds = userFollowings.map(following => following.user);
 
-        const posts = await Post.find({ userId: { $in: followingIds }})
+        const posts = await Post.find({ userId: { $in: followingIds }}).sort({createdAt : -1})
 
         if (!posts.length) {
             return res.status(400).send(`No posts found for the following users.`);

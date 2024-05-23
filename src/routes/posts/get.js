@@ -44,14 +44,14 @@ router.get('/', ensureAuth(), async (req, res) => {
     }
 });
 
-router.get('/:_id', ensureAuth(), async(req, res) => {
-    try{
-        const post = await Post.findById(req.params._id)
-        return res.status(200).json(post)
-    }catch(err){
-        console.log(err);
-        res.send('post not found')
-    }
-})
+// router.get('/:_id', ensureAuth(), async(req, res) => {
+//     try{
+//         const post = await Post.findById(req.params._id)
+//         return res.status(200).json(post)
+//     }catch(err){
+//         console.log(err);
+//         res.send('post not found')
+//     }
+// })
 
 module.exports = router;
