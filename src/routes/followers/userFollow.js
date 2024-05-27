@@ -29,7 +29,7 @@ const User = require('../../models/userModel');
 const Follow = require('../../models/followModel');
 const mongoose = require('mongoose');
 
-router.post('/follow/:id', ensureAuth(), async (req, res) => {
+router.post('/:id/follow', ensureAuth(), async (req, res) => {
     try {
         const userToFollow = await User.findById(req.params.id);
         if (!userToFollow) {

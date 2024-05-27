@@ -62,9 +62,6 @@ router.post("/register", async (req, res) => {
         name: validatedUser.name,
         email: validatedUser.email,
         password: hashedPassword,
-        role: "user",
-        privacy: "public",
-        bio : "Hello, I'm using this blog.",
       });
 
       await newUser.save();

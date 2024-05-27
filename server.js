@@ -43,6 +43,9 @@ app.use('/posts', require('./src/routes/posts/update.js'));
 app.use('/posts', require('./src/routes/posts/delete.js'));
 app.use('/posts/followings/', require('./src/routes/posts/postsFollowings.js'));
 
+// Comments routes
+app.use('/', require('./src/routes/comments/create.js'));
+
 // User posts route.
 app.use('/users/posts', require('./src/routes/posts/userPostsRoutes.js'));
 

@@ -55,7 +55,7 @@ router.get('/:id', ensureAuth(), async (req, res) => {
 
             return res.status(200).json(posts);
         } else if (user.privacy === 'private') {
-            const existingFollow = await Follow.findOne({ user: user.id, follower: req.user.id });
+            const existingFollow = await Follow.findOne({ user: user.id, follower: req.user.id, status : 'accepted'});
             if (!existingFollow) {
                 return res.status(400).send('This account is private, follow the user first.');
             } else {

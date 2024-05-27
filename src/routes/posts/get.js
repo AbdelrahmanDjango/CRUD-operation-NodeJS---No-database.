@@ -28,10 +28,15 @@ const router = express.Router();
 const ensureAuth = require('../../middlewares/auth')
 const Post = require('../../models/postModel')
 const User = require('../../models/userModel')
+const Comment = require('../../models/commentModel')
 
-router.get('/', ensureAuth(), async (req, res) => {
+router.get('/', async (req, res) => {
     try{
-        const posts = await Post.find({privacy : 'public'}).sort({createdAt : -1})
+        const posts = await Post.find({privacy : 'public'})
+        .sort({createdAt : -1})
+        .populate('comments')
+        // To get specify fields by populate, put fields name in Array
+        // .populate('comments', ['name', 'comment', 'createdAt'])
         if(!posts || posts.length === 0){
             return res.status(400).json({msg : 'Posts not found.'})
         }else{
@@ -43,6 +48,12 @@ router.get('/', ensureAuth(), async (req, res) => {
         res.send('Server error.')
     }
 });
+
+router.get('/comments', async (req, res) => {
+    const comments = await Comment.find()
+    // .populate('userId', 'name');
+    return res.status(200).json({comments : comments})
+})
 
 // router.get('/:_id', ensureAuth(), async(req, res) => {
 //     try{

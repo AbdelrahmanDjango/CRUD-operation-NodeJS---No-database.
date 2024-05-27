@@ -9,10 +9,10 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String, unique: true
   },
-  bio: String,
-  role: String,
+  bio: {type: String, default : 'Hello, I\'m using this blog.'},
+  role: {type : String, default : 'user'},
   password: String,
-  privacy: String,
+  privacy: {type: String, default : 'public'},
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
