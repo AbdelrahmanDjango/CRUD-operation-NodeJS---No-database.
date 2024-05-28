@@ -19,11 +19,58 @@
  *                   items:
  *                     $ref: '#/components/schemas/Post'
  *       '400':
- *         description: No posts found for the followed users
+ *         description: No posts found for the followed users or not following anyone
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: No posts found for the following users.
  *       '404':
  *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: User not found.
  *       '500':
  *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: Server error.
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Post:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         title:
+ *           type: string
+ *         content:
+ *           type: string
+ *         privacy:
+ *           type: string
+ *         commentsStatus:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */
 
 const express = require('express');

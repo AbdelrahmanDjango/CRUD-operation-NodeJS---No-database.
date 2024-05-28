@@ -16,10 +16,42 @@
  *     responses:
  *       '200':
  *         description: Successfully unfollowed the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Unfollow {user name} successfully."
  *       '400':
  *         description: User not found, already not following the user, or trying to unfollow oneself
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "You're already not following {user name}" or "You can't unfollow yourself."
+ *       '404':
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "User not found."
  *       '500':
  *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Internal Server Error."
+ */
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */
 
 const express = require("express");
@@ -28,7 +60,7 @@ const ensureAuth = require("../../middlewares/auth");
 const User = require("../../models/userModel");
 const Follow = require("../../models/followModel");
 
-router.delete('/unfollow/:id', ensureAuth(), async (req, res) =>{
+router.delete('/:id/unfollow', ensureAuth(), async (req, res) =>{
     try {
         const userToUnFollow = await User.findById(req.params.id);
         if (!userToUnFollow) {

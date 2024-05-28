@@ -11,7 +11,9 @@ const postSchema = new mongoose.Schema({
     type: String,
     ref: 'User',
   },
+  commentsStatus: { type: String, enum: ['closedForAll', 'openedForAll', 'openedForFollowers'], default: 'openedForAll' }
 },
+
 { timestamps : true}
 );
 postSchema.virtual('comments', { // parameter to get related objects.

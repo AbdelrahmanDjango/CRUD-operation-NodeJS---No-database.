@@ -41,6 +41,7 @@ app.use('/posts', require('./src/routes/posts/create.js'));
 app.use('/posts', require('./src/routes/posts/get.js'));
 app.use('/posts', require('./src/routes/posts/update.js'));
 app.use('/posts', require('./src/routes/posts/delete.js'));
+app.use('/posts', require('./src/routes/posts/commentsStatus.js'));
 app.use('/posts/followings/', require('./src/routes/posts/postsFollowings.js'));
 
 // Comments routes
@@ -63,7 +64,6 @@ app.use('/users/', require('./src/routes/followers/userFollow.js'));
 app.use('/users/', require('./src/routes/followers/getFollowing.js'));
 app.use('/users/', require('./src/routes/followers/userUnfollow.js'));
 app.use('/users/', require('./src/routes/followers/followResponse.js'))
-// app.use('/users/', require('./src/routes/followers/getFollowing.js'))
 
 app.use(catchError);
 
