@@ -22,12 +22,11 @@
  *               type: string
  *               example: "Unfollow {user name} successfully."
  *       '400':
- *         description: User not found, already not following the user, or trying to unfollow oneself
- *         content:
- *           application/json:
- *             schema:
- *               type: string
- *               example: "You're already not following {user name}" or "You can't unfollow yourself."
+ *         description: |
+ *           User not found, already not following the user, or trying to unfollow oneself
+ *           Examples:
+ *             - "You're already not following {user name}"
+ *             - "You can't unfollow yourself."
  *       '404':
  *         description: User not found
  *         content:
@@ -44,15 +43,6 @@
  *               example: "Internal Server Error."
  */
 
-/**
- * @swagger
- * components:
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- */
 
 const express = require("express");
 const router = express.Router();
