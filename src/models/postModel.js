@@ -3,29 +3,34 @@ const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema({
   body: String,
   privacy: String,
-  userId:{
+  userId: {
     type: String,
     ref: 'User',
   },
-  name:{
+  name: {
     type: String,
     ref: 'User',
   },
-  commentsStatus: { type: String, enum: ['closedForAll', 'openedForAll', 'openedForFollowers'], default: 'openedForAll' }
-},
+  groupId: {
+    type: String, 
+    ref: 'Group'
+  },
+  commentsStatus: { 
+    type: String, 
+    enum: ['closedForAll', 'openedForAll', 'openedForFollowers'], 
+    default: 'openedForAll' 
+  }
+}, { timestamps: true });
 
-{ timestamps : true}
-);
-postSchema.virtual('comments', { // parameter to get related objects.
-  ref : 'comments', // Model.
+postSchema.virtual('comments', { // comments is a parameter to get related objects.
+  ref: 'Comment', // Model should be singular and correct
   localField: '_id', 
-  foreignField: 'postId' // This is in post model. 
+  foreignField: 'postId' // This is in comment model. 
 });
 
-postSchema.set('toObject', {virtuals : true});
-postSchema.set('toJSON', {virtuals : true});
+postSchema.set('toObject', { virtuals: true });
+postSchema.set('toJSON', { virtuals: true });
 
-
-const Post = mongoose.model('posts', postSchema);
+const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;

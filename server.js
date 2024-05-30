@@ -56,14 +56,20 @@ app.use('/users/', require('./src/routes/auth/login.js'));
 app.use('/users/', require('./src/routes/auth/get.js'));
 app.use('/users/', require('./src/routes/auth/update.js'));
 app.use('/users/', require('./src/routes/auth/delete.js'));
-app.use('/users/', require('./src/routes/settings/resetPassword.js'));
-app.use('/users', require('./src/routes/settings/editPrivacy.js'))
+app.use('/users/', require('./src/routes/accountSettings/resetPassword.js'));
+app.use('/users', require('./src/routes/accountSettings/editPrivacy.js'))
 
 // Following && followers routes.
 app.use('/users/', require('./src/routes/followers/userFollow.js'));
 app.use('/users/', require('./src/routes/followers/getFollowing.js'));
 app.use('/users/', require('./src/routes/followers/userUnfollow.js'));
 app.use('/users/', require('./src/routes/followers/followResponse.js'))
+
+// Groups routes.
+app.use('/groups', require('./src/routes/groups/create.js'));
+app.use('/groups', require('./src/routes/groups/join.js'));
+app.use('/groups', require('./src/routes/groups/privacyStatus.js'));
+app.use('/groups', require('./src/routes/groups/requestJoin.js'));
 
 app.use(catchError);
 
