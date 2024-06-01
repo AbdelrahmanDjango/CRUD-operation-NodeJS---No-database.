@@ -13,6 +13,7 @@ const groupSchema = new mongoose.Schema({
   name: {
     type: String, 
     ref: 'User',
+    // alias : 'owner', // Alias method for only queries, not showing data.
   },
   privacyStatus : {
     type: String, 
@@ -32,6 +33,7 @@ groupSchema.virtual('users', { // users is a parameter to get related objects.
   localField: '_id',
   foreignField: 'groupId' // This is in user model.
 });
+
 
 groupSchema.set('toObject', { virtuals: true });
 groupSchema.set('toJSON', { virtuals: true });

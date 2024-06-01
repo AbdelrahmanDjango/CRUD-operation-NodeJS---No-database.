@@ -14,7 +14,7 @@ router.post('/:id/join', ensureAuth(), async(req, res) => {
             const existingMembership = await Membership.findOne({ userId: req.user.id, groupId: req.params.id, status : 'accepted'});
             if(existingMembership){
                 return res.status(400).send('You are already in this group');
-            }
+            };
             const newMembership = new Membership({
                 userId: req.user.id,
                 groupId: req.params.id

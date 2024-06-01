@@ -31,15 +31,17 @@ router.get('/:groupId/requests', ensureAuth(), async(req, res) => {
 });
 router.patch('/:groupId/:userId/response', ensureAuth(), async(req, res) => {
     try{
-        const user = await User.findById(req.user.id);
-        if(!user){
-            return res.status(400).send('User not found.');
+        const groupOwner = await User.findById(req.user.id);
+        const isAdmin = await Membership.findOne({userId : req.user.id, groupId: req.params.groupId, role : 'admin'})
+        if(!groupOwner || (!groupOwner && !isAdmin)){
+            return res.status(400).send('You are not the group owner or admin.')
         };
         const group = await Group.findById(req.params.groupId);
         if(!group){
             return res.status(400).send('Group not found.');
         };
-        if(user.id !== group.userId){
+        console.log(group.userId);
+        if((groupOwner.id !== group.userId && !isAdmin) || (groupOwner.id !== group.userId && !isAdmin)){
             return res.status(400).send('You don\'t have access on requests join for this group.')
         };
         const joinRequest = await Membership.findOne({userId : req.params.userId, groupId : group.id, status : 'pending'});

@@ -70,6 +70,7 @@ app.use('/groups', require('./src/routes/groups/create.js'));
 app.use('/groups', require('./src/routes/groups/join.js'));
 app.use('/groups', require('./src/routes/groups/privacyStatus.js'));
 app.use('/groups', require('./src/routes/groups/requestJoin.js'));
+app.use('/groups', require('./src/routes/groups/editRole.js'));
 
 app.use(catchError);
 
