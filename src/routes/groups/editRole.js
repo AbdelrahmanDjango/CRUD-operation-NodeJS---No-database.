@@ -6,21 +6,19 @@ const User = require('../../models/userModel');
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 
+// Only owner group.
 router.patch('/:groupId/:userId/role/edit', ensureAuth(), async(req, res) => {
     try{
-        const user = await User.findById(req.user.id);
-        if(!user){
-            return res.status(400).send('User not found');
-        };
+        const groupOwner = await User.findById(req.user.id);
         const group = await Group.findById(req.params.groupId);
         if(!group){
             return res.status(400).send('Group not found.')
         };
-        if(user.name !== group.name || (user.name !== group.name && group.privacyStatus === 'private')){
+        if(groupOwner.name !== group.name || (groupOwner.name !== group.name && group.privacyStatus === 'private')){
             console.log('group name:', group.name)
             console.log('group privacy:', group.privacyStatus)
-            console.log('user name:', user.name)
-            return res.status(400).send('You don\'t have access to doing this.')
+            console.log('user name:', groupOwner.name)
+            return res.status(403).send('Access denied. Only the group owner can perform this action.');
         }
         const userIsMember = await Membership.findOne({userId : req.params.userId, groupId : req.params.groupId});
         if(!userIsMember){

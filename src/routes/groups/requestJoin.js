@@ -9,15 +9,12 @@ const User = require('../../models/userModel');
 router.get('/:groupId/requests', ensureAuth(), async(req, res) => {
     try{
         const user = await User.findById(req.user.id);
-        if(!user){
-            return res.status(400).send('User not found.');
-        };
         const group = await Group.findById(req.params.groupId);
         if(!group){
             return res.status(400).send('Group not found.');
         };
         if(user.id !== group.userId){
-            return res.status(400).send('You don\'t have access on requests join for this group.')
+            return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };
         const joinRequests = await Membership.find({ groupId: group.id, status: 'pending' });
         if(!joinRequests.length) { 
@@ -29,12 +26,14 @@ router.get('/:groupId/requests', ensureAuth(), async(req, res) => {
         return res.send('Server error.')
     }
 });
+
+// Group owner  and admin.
 router.patch('/:groupId/:userId/response', ensureAuth(), async(req, res) => {
     try{
         const groupOwner = await User.findById(req.user.id);
         const isAdmin = await Membership.findOne({userId : req.user.id, groupId: req.params.groupId, role : 'admin'})
         if(!groupOwner || (!groupOwner && !isAdmin)){
-            return res.status(400).send('You are not the group owner or admin.')
+            return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };
         const group = await Group.findById(req.params.groupId);
         if(!group){
@@ -42,7 +41,7 @@ router.patch('/:groupId/:userId/response', ensureAuth(), async(req, res) => {
         };
         console.log(group.userId);
         if((groupOwner.id !== group.userId && !isAdmin) || (groupOwner.id !== group.userId && !isAdmin)){
-            return res.status(400).send('You don\'t have access on requests join for this group.')
+            return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };
         const joinRequest = await Membership.findOne({userId : req.params.userId, groupId : group.id, status : 'pending'});
         if(!joinRequest){

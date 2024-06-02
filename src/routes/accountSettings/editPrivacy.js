@@ -36,9 +36,6 @@ const Post = require('../../models/postModel');
 router.put('/privacy', ensureAuth(), async(req, res) => {
     try{
         const user = await User.findById(req.user.id);
-        if(!user){
-        return res.status(400).send('Invalid authorization.');
-        }
         const newPrivacy = await validatePrivacy(req.body);
         if(user.privacy !== newPrivacy.privacy){
 

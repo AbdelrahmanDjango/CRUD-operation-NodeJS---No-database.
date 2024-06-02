@@ -113,9 +113,6 @@ router.post('/posts/:id/comment/create', ensureAuth(), async(req, res) => {
             return res.status(404).send('Post not found.');
         };
         const user = await User.findById(req.user.id);
-        if(!user){
-            return res.status(400).send('User not found.');
-        };
         if(post.privacy === 'private'){
             const existingFollow = await Follow.findOne({ user: post.userId, follower: req.user.id, status : 'accepted'});
             if(!existingFollow){
@@ -155,9 +152,6 @@ router.get('/posts/:id/comments/',ensureAuth(), async(req, res) => {
             return res.status(404).send('Post not found.');
         };
         const user = await User.findById(req.user.id);
-        if(!user){
-            return res.status(400).send('User not found.');
-        };
         const comments = await Comment.find({postId : post.id})
         if(comments.length > 0){
             if(post.privacy === 'private'){

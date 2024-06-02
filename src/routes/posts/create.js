@@ -45,9 +45,6 @@ router.post("/create", ensureAuth(), async (req, res) => {
   try {
     
     const user = await User.findById(req.user.id)
-    if(!user){
-      return res.status(400).send('User not found');
-    }
     const post = await validationPost(req.body);
     if (post){
       const newPost = new Post({

@@ -66,11 +66,14 @@ app.use('/users/', require('./src/routes/followers/userUnfollow.js'));
 app.use('/users/', require('./src/routes/followers/followResponse.js'))
 
 // Groups routes.
-app.use('/groups', require('./src/routes/groups/create.js'));
-app.use('/groups', require('./src/routes/groups/join.js'));
+app.use('/groups', require('./src/routes/groups/createGroup.js'));
+app.use('/groups', require('./src/routes/groups/deleteGroup.js'));
 app.use('/groups', require('./src/routes/groups/privacyStatus.js'));
+app.use('/groups', require('./src/routes/groups/join.js'));
 app.use('/groups', require('./src/routes/groups/requestJoin.js'));
 app.use('/groups', require('./src/routes/groups/editRole.js'));
+app.use('/groups', require('./src/routes/groups/editPostStatus.js'));
+app.use('/groups', require('./src/routes/groups/removeUser.js'));
 
 app.use(catchError);
 

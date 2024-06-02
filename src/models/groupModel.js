@@ -20,6 +20,11 @@ const groupSchema = new mongoose.Schema({
     enum: ['public', 'private'], 
     default: 'public'
   },
+  postStatus : {
+    type : String, 
+    enum : ['pending', 'rejected', 'accepted'], 
+    default : 'accepted'
+  },
 }, { timestamps: true });
 
 groupSchema.virtual('posts', { // posts is a parameter to get related objects.

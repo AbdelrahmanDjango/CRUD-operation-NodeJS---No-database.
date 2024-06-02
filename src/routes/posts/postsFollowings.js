@@ -85,9 +85,6 @@ const router = express.Router();
 router.get('/', ensureAuth(), async(req, res) => {
     try{
         const user = await User.findById(req.user.id);
-        if(!user){
-            return res.status(404).send('User not found.');
-        };
         const userFollowings = await Follow.find({follower : req.user.id})
         if(!userFollowings.length > 0){
             return res.status(400).send(`You are not following anyone.`)

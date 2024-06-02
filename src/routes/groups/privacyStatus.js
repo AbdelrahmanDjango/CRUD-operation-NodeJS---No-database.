@@ -8,10 +8,6 @@ const Group = require('../../models/groupModel');
 router.patch('/:id/privacy', ensureAuth(), async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if(!user) {
-            return res.status(404).send('User not found');
-        }
-
         const group = await Group.findById(req.params.id);
         if(!group) {
             return res.status(404).send('Group not found');

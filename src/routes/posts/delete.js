@@ -37,9 +37,6 @@ router.delete('/delete/:id', ensureAuth(), async (req, res) => {
             return res.status(400).send('Post doesn\'t exists.')
         };
         const user = await User.findById(req.user.id);
-        if(!user){
-            return res.status(403).send("invalid authorization");
-        };
         if(user.id === post.userId){
             await Post.findOneAndDelete({userId : user.id});
             return res.status(200).send('Post deleted successfully.');

@@ -115,8 +115,7 @@ const Joi = require("joi");
 
 router.patch('/follow/response/:id', ensureAuth(), async (req, res) => {
     try {
-        const userId = req.user.id;
-        if(!userId) return res.status(400).send('Invalid Credentials');
+        const userId = await User.findById(req.user.id);
         const followRequest = await Follow.findOne({user : userId, follower : req.params.id, status: 'pending'});
         if(!followRequest) {
             return res.status(400).send('There is no follow request.')
