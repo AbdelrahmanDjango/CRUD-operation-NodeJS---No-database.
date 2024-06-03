@@ -13,12 +13,18 @@ const postSchema = new mongoose.Schema({
   },
   groupId: {
     type: String, 
-    ref: 'Group'
+    ref: 'Group',
+  },
+  postRole: {
+    type: String, 
+    enum: ['admin', 'user'], 
+    default: 'user',
+    ref: 'Group', 
   },
   commentsStatus: { 
     type: String, 
     enum: ['closedForAll', 'openedForAll', 'openedForFollowers'], 
-    default: 'openedForAll' 
+    default: 'openedForAll', 
   }
 }, { timestamps: true });
 

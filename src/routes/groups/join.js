@@ -1,18 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
+const getMembershipAndGroup = require("../../middlewares/userAndGroup");
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 
-router.post('/:id/join', ensureAuth(), async(req, res) => {
+router.post('/:groupId/join', ensureAuth, getMembershipAndGroup, async(req, res) => {
     try{
-        const group = await Group.findById(req.params.id);
-        if(!group){
-            return res.status(400).send('Group not found.');
-        };
+        // I check user is member or not twice: if group is public; or private.
+        const group = await req.targetGroup;
         if(group.privacyStatus === 'public'){
-            const existingMembership = await Membership.findOne({ userId: req.user.id, groupId: req.params.id, status : 'accepted'});
-            if(existingMembership){
+            const isMembership = await Membership.findOne({ userId: req.user.id, groupId: req.params.groupId, status : 'accepted'});
+            if(isMembership){
                 return res.status(400).send('You are already in this group');
             };
             const newMembership = new Membership({
@@ -27,12 +26,12 @@ router.post('/:id/join', ensureAuth(), async(req, res) => {
                 groupId: req.params.id,
                 status : 'pending'
             });
-            const existingJoinRequest = await Membership.findOne({ userId: req.user.id, groupId: req.params.id, status : 'pending'});
+            const existingJoinRequest = await Membership.findOne({ userId: req.user.id, groupId: req.params.groupId, status : 'pending'});
             if(existingJoinRequest){
                 return res.status(400).send('Request join already sent.');
             }
-            const existingMembership = await Membership.findOne({ userId: req.user.id, groupId: req.params.id, status : 'accepted'});
-            if(existingMembership){
+            const isMembership = await Membership.findOne({ userId: req.user.id, groupId: req.params.groupId, status : 'accepted'});
+            if(isMembership){
                 return res.status(400).send('You are already in this group.');
             }
             reqeustJoin.save();

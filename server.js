@@ -42,13 +42,15 @@ app.use('/posts', require('./src/routes/posts/get.js'));
 app.use('/posts', require('./src/routes/posts/update.js'));
 app.use('/posts', require('./src/routes/posts/delete.js'));
 app.use('/posts', require('./src/routes/posts/commentsStatus.js'));
-app.use('/posts/followings/', require('./src/routes/posts/postsFollowings.js'));
+app.use('/posts/followings/', require('./src/routes/posts/userPosts/postsFollowings.js'));
+app.use('/groups', require('./src/routes/posts/groups/groupPosts.js'));
+app.use('/groups', require('./src/routes/posts/groups/getPosts.js'));
 
 // Comments routes
 app.use('/', require('./src/routes/comments/create.js'));
 
 // User posts route.
-app.use('/users/posts', require('./src/routes/posts/userPostsRoutes.js'));
+app.use('/users/posts', require('./src/routes/posts/userPosts/userPostsRoutes.js'));
 
 // Auth routes.
 app.use('/users/', require('./src/routes/auth/register.js'));

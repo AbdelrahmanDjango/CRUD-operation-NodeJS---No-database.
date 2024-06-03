@@ -2,17 +2,15 @@ const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
+const getMembershipAndGroup = require("../../middlewares/userAndGroup");
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 const User = require('../../models/userModel');
 
-router.get('/:groupId/requests', ensureAuth(), async(req, res) => {
+router.get('/:groupId/requests', ensureAuth, getMembershipAndGroup, async(req, res) => {
     try{
         const user = await User.findById(req.user.id);
-        const group = await Group.findById(req.params.groupId);
-        if(!group){
-            return res.status(400).send('Group not found.');
-        };
+        const group = await req.targetGroup;
         if(user.id !== group.userId){
             return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };
@@ -28,18 +26,14 @@ router.get('/:groupId/requests', ensureAuth(), async(req, res) => {
 });
 
 // Group owner  and admin.
-router.patch('/:groupId/:userId/response', ensureAuth(), async(req, res) => {
+router.patch('/:groupId/:userId/response', ensureAuth, getMembershipAndGroup, async(req, res) => {
     try{
         const groupOwner = await User.findById(req.user.id);
         const isAdmin = await Membership.findOne({userId : req.user.id, groupId: req.params.groupId, role : 'admin'})
         if(!groupOwner || (!groupOwner && !isAdmin)){
             return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };
-        const group = await Group.findById(req.params.groupId);
-        if(!group){
-            return res.status(400).send('Group not found.');
-        };
-        console.log(group.userId);
+        const group = await req.targetGroup;
         if((groupOwner.id !== group.userId && !isAdmin) || (groupOwner.id !== group.userId && !isAdmin)){
             return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };

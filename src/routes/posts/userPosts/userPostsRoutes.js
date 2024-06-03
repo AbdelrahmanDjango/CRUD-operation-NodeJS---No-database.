@@ -32,10 +32,10 @@
 
 const express = require('express');
 const Joi = require('joi');
-const ensureAuth = require('../../middlewares/auth');
-const User = require('../../models/userModel');
-const Post = require('../../models/postModel');
-const Follow = require('../../models/followModel');
+const ensureAuth = require('../../../middlewares/auth');
+const User = require('../../../models/userModel');
+const Post = require('../../../models/postModel');
+const Follow = require('../../../models/followModel');
 const router = express.Router();
 
 

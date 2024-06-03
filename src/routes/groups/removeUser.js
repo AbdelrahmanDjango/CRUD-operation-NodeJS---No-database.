@@ -2,36 +2,29 @@ const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
+const getMembershipAndGroup = require("../../middlewares/userAndGroup");
 const User = require('../../models/userModel');
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 
 // Group owner  and admin.
-router.delete('/:groupId/:userId/delete', ensureAuth(), async(req, res) => {
+router.delete('/:groupId/:userId/delete', ensureAuth, getMembershipAndGroup, async(req, res) => {
     try{
         const groupOwner = await User.findById(req.user.id);
         const isAdmin = await Membership.findOne({userId : req.user.id, groupId: req.params.groupId, role : 'admin'})
         if(!groupOwner || (!groupOwner && !isAdmin)){
             return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };
-        console.log(groupOwner);
 
-        const group = await Group.findById(req.params.groupId);
-        if(!group){
-            return res.status(400).send('Group not found.');
-        };
+        const group = await req.targetGroup;
 
         // Is authenticated user not the group owner or admin?
         if((groupOwner.id !== group.userId && !isAdmin) || (groupOwner.id !== group.userId && !isAdmin)){
             return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };
-
         // Is user to delete in group?
-        const userToDelete = await User.findById(req.params.userId);
-        const isMembership = await Membership.findOne({
-            userId: req.params.userId,
-            groupId: req.params.groupId,
-        });
+        const userToDelete = await req.targetUser;
+        const isMembership = await req.targetMembership;
 
         // Is group owner tying to delete him self?
         if(userToDelete.id === groupOwner._id){
@@ -64,14 +57,8 @@ router.delete('/:groupId/:userId/delete', ensureAuth(), async(req, res) => {
                 groupId: req.params.groupId,
                 status: 'accepted'
         });
-            return res.status(200).send(`You leaved ${group.groupName} group.`)
+            return res.status(200).send(`${userToDelete.id} deleted successfully.`)
         };
-        await Membership.findOneAndDelete({
-            userId: req.params.userId,
-            groupId: req.params.groupId,
-            status: 'accepted'
-        });
-        return res.status(200).send(`${userToDelete.id} deleted successfully.`)
         
     }catch(err){
         console.log(err);

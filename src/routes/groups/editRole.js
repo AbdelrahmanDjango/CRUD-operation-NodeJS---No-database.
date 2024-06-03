@@ -20,17 +20,17 @@ router.patch('/:groupId/:userId/role/edit', ensureAuth(), async(req, res) => {
             console.log('user name:', groupOwner.name)
             return res.status(403).send('Access denied. Only the group owner can perform this action.');
         }
-        const userIsMember = await Membership.findOne({userId : req.params.userId, groupId : req.params.groupId});
-        if(!userIsMember){
+        const isMembership = await Membership.findOne({userId : req.params.userId, groupId : req.params.groupId});
+        if(!isMembership){
             return res.status(400).send('User not found.')
         };
         const editRole = await validationUserRole(req.body);
-        if(editRole.role === userIsMember.role){
+        if(editRole.role === isMembership.role){
             return res.status(200).send('Nothing have changed.')
         };
-        userIsMember.role = editRole.role;
-        userIsMember.save();
-        return res.status(200).send(`You gave ${userIsMember.userId} a new role in ${group.groupName} group: ${userIsMember.role}'s role.`)
+        isMembership.role = editRole.role;
+        isMembership.save();
+        return res.status(200).send(`You gave ${isMembership.userId} a new role in ${group.groupName} group: ${isMembership.role}'s role.`)
 
     }catch(err){
         console.log(err);

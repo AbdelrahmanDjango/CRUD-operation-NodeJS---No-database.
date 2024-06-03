@@ -6,7 +6,7 @@ const User = require('../../models/userModel');
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 
-router.post('/create', ensureAuth(), async(req, res) => {
+router.post('/create', ensureAuth, async(req, res) => {
     try{
         const user = await User.findById(req.user.id);
         const group = await validationGroup(req.body);
@@ -15,7 +15,7 @@ router.post('/create', ensureAuth(), async(req, res) => {
                 groupName : req.body.groupName, 
                 name : user.name, 
                 userId : user._id,
-            });
+        });
         const groupIsExists = await Group.findOne({groupName: group.groupName});
         if(groupIsExists){
             return res.status(400).send('Group name taken, write a unique name.')
