@@ -27,15 +27,13 @@
 const express = require('express');
 const router = express.Router();
 const ensureAuth = require('../../middlewares/auth');
+const getPost = require('../../middlewares/getPost');
 const Post = require('../../models/postModel');
 const User = require('../../models/userModel');
 
-router.delete('/delete/:id', ensureAuth(), async (req, res) => {
+router.delete('/delete/:postId', ensureAuth(), async (req, res) => {
     try{
-        const post = await Post.findById(req.params.id);
-        if(!post){
-            return res.status(400).send('Post doesn\'t exists.')
-        };
+        const post = await req.targetPost;
         const user = await User.findById(req.user.id);
         if(user.id === post.userId){
             await Post.findOneAndDelete({userId : user.id});

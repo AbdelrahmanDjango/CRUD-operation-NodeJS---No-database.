@@ -49,16 +49,14 @@
 const express = require('express');
 const Joi = require('joi');
 const ensureAuth = require('../../middlewares/auth');
+const getPost = require('../../middlewares/getPost');
 const Post = require('../../models/postModel');
 const User = require('../../models/userModel');
 const router = express.Router();
 
-router.put('/update/:id', ensureAuth(), async (req, res) => {
+router.put('/update/:postId', ensureAuth, getPost, async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id);
-        if (!post) {
-            return res.status(400).send('Post doesn\'t exist.');
-        }
+        const post = await req.targetPost;
 
         const user = await User.findById(req.user.id);
         if (!user) {
@@ -70,7 +68,7 @@ router.put('/update/:id', ensureAuth(), async (req, res) => {
         }
 
         const validatedPostData = await validationPost(req.body);
-        await Post.findByIdAndUpdate(req.params.id, { body: validatedPostData.body });
+        await Post.findByIdAndUpdate(req.params.postId, { body: validatedPostData.body });
 
         return res.status(200).json({ Updated: 'Post updated successfully.', validatedPostData });
     } catch (err) {

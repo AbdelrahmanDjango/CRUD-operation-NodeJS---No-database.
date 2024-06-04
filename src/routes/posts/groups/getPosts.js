@@ -1,17 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const ensureAuth = require('../../../middlewares/auth')
+const getUserOrMembershipOrGroup = require('../../../middlewares/userAndGroup')
 const Post = require('../../../models/postModel')
 const User = require('../../../models/userModel')
 const Membership = require('../../../models/membershipModel')
 const Group = require('../../../models/groupModel')
 
-router.get('/:groupId/:userId/posts', ensureAuth(), async(req, res) =>{
+router.get('/:groupId/:userId/posts', ensureAuth, getUserOrMembershipOrGroup, async(req, res) =>{
     try{
-        const group = await Group.findById(req.params.groupId);
-        if(!group){
-            return res.status(404).send('Group not found.');
-        };
+        const group = await req.targetGroup;
         const user = await User.findById(req.user.id);
         const isMembership = await Membership.findOne({groupId: group.id, userId: user.id, status: 'accepted'});
         if(!isMembership){

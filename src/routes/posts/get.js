@@ -88,6 +88,7 @@
 const express = require('express');
 const router = express.Router();
 const ensureAuth = require('../../middlewares/auth')
+const getPost = require('../../middlewares/getPost')
 const Post = require('../../models/postModel')
 const User = require('../../models/userModel')
 const Comment = require('../../models/commentModel')
@@ -112,18 +113,17 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/:id', async(req, res) => {
+router.get('/:postId', getPost, async(req, res) => {
     try{
-        const post = await Post.findById(req.params.id)
-        if(!post){
-            return res.status(400).send('Post not found.')
-        }
+        const post = await req.targetPost;
         if(post.privacy === 'public'){
             return res.status(200).json(post)
-        }
+        }else{
+            return res.status(400).send('This account is private. Sing up and follow him.')
+        };
     }catch(err){
         console.log(err);
-        res.send('post not found')
+        res.send('Server error.')
     }
 })
 

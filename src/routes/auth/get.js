@@ -47,7 +47,8 @@
 
 const express = require('express');
 const router = express.Router();
-const User = require('../../models/userModel');
+// const User = require('../../models/userModel');
+const getUserOrMembershipOrGroup = require('../../middlewares/userAndGroup')
 
 
 router.get('/', async (req, res) => {
@@ -65,13 +66,13 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/:id', async(req, res) => {
+router.get('/:userId', getUserOrMembershipOrGroup, async(req, res) => {
     try{
-        const userID = await User.findById(req.params.id);
-        if (userID){
-            res.status(200).json({'user' : userID});
+        const user = await req.targetUser
+        if (user){
+            res.status(200).json({'user' : user});
         }else{
-            res.status(400).json({msg : `There is no user with this ID: ${req.params.id}.`});
+            res.status(400).json({msg : `There is no user with this ID: ${req.params.userId}.`});
         }
     }catch(err){
         console.log(err);

@@ -100,18 +100,16 @@ const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
+const getPost = require("../../middlewares/getPost");
 const User = require('../../models/userModel');
 const Post = require('../../models/postModel');
 const Comment = require('../../models/commentModel');
 const Follow = require("../../models/followModel");
 
 
-router.post('/posts/:id/comment/create', ensureAuth(), async(req, res) => {
+router.post('/posts/:postId/comment/create', ensureAuth, getPost, async(req, res) => {
     try{
-        const post = await Post.findById(req.params.id);
-        if(!post){
-            return res.status(404).send('Post not found.');
-        };
+        const post = await req.targetPost
         const user = await User.findById(req.user.id);
         if(post.privacy === 'private'){
             const existingFollow = await Follow.findOne({ user: post.userId, follower: req.user.id, status : 'accepted'});

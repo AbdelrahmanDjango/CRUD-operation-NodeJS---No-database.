@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 const Group = require('../models/groupModel');
 const Membership = require('../models/membershipModel');
 
-const getMembershipAndGroup = async (req, res, next) => {
+const getUserOrMembershipOrGroup = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.userId);
         if (!user) {
@@ -30,4 +30,4 @@ const getMembershipAndGroup = async (req, res, next) => {
         return res.status(500).send('Server error.');
     }
 };
-module.exports = getMembershipAndGroup;
+module.exports = getUserOrMembershipOrGroup;

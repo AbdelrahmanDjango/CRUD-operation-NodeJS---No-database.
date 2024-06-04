@@ -2,12 +2,12 @@ const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
-const getMembershipAndGroup = require("../../middlewares/userAndGroup");
+const getUserOrMembershipOrGroup = require("../../middlewares/userAndGroup");
 const User = require('../../models/userModel');
 const Membership = require('../../models/membershipModel');
 
 // Group owner  and admin.
-router.patch('/:groupId/post_status/edit', ensureAuth, getMembershipAndGroup, async(req, res) => {
+router.patch('/:groupId/post_status/edit', ensureAuth, getUserOrMembershipOrGroup, async(req, res) => {
     try{
         const groupOwner = await User.findById(req.user.id);
         const isAdmin = await Membership.findOne({userId : req.user.id, groupId: req.params.groupId, role : 'admin'})

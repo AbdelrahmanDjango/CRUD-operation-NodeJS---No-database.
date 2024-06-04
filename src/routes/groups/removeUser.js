@@ -2,13 +2,13 @@ const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
-const getMembershipAndGroup = require("../../middlewares/userAndGroup");
+const getUserOrMembershipOrGroup = require("../../middlewares/userAndGroup");
 const User = require('../../models/userModel');
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 
 // Group owner  and admin.
-router.delete('/:groupId/:userId/delete', ensureAuth, getMembershipAndGroup, async(req, res) => {
+router.delete('/:groupId/:userId/delete', ensureAuth, getUserOrMembershipOrGroup, async(req, res) => {
     try{
         const groupOwner = await User.findById(req.user.id);
         const isAdmin = await Membership.findOne({userId : req.user.id, groupId: req.params.groupId, role : 'admin'})

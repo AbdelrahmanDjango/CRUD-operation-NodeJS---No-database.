@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
-const getMembershipAndGroup = require("../../middlewares/userAndGroup");
+const getUserOrMembershipOrGroup = require("../../middlewares/userAndGroup");
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 
-router.post('/:groupId/join', ensureAuth, getMembershipAndGroup, async(req, res) => {
+router.post('/:groupId/join', ensureAuth, getUserOrMembershipOrGroup, async(req, res) => {
     try{
         // I check user is member or not twice: if group is public; or private.
         const group = await req.targetGroup;

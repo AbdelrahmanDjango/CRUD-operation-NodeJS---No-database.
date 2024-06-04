@@ -113,16 +113,16 @@ const User = require('../../models/userModel')
 const Follow = require('../../models/followModel')
 const Joi = require("joi");
 
-router.patch('/follow/response/:id', ensureAuth(), async (req, res) => {
+router.patch('/follow/response/:userId', ensureAuth(), async (req, res) => {
     try {
         const userId = await User.findById(req.user.id);
-        const followRequest = await Follow.findOne({user : userId, follower : req.params.id, status: 'pending'});
+        const followRequest = await Follow.findOne({user : userId, follower : req.params.userId, status: 'pending'});
         if(!followRequest) {
             return res.status(400).send('There is no follow request.')
         }else{
             const response = await validationResponse(req.body)
             if(response.status === 'rejected'){
-                await Follow.findOneAndDelete({user : userId, follower: req.params.id});
+                await Follow.findOneAndDelete({user : userId, follower: req.params.userId});
             }else{
                 followRequest.status = response.status
                 await followRequest.save();

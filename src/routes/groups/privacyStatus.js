@@ -2,11 +2,11 @@ const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
-const getMembershipAndGroup = require("../../middlewares/userAndGroup");
+const getUserOrMembershipOrGroup = require("../../middlewares/userAndGroup");
 const User = require('../../models/userModel');
 const Group = require('../../models/groupModel');
 
-router.patch('/:id/privacy', ensureAuth, getMembershipAndGroup, async (req, res) => {
+router.patch('/:id/privacy', ensureAuth, getUserOrMembershipOrGroup, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         const group = await req.targetGroup;

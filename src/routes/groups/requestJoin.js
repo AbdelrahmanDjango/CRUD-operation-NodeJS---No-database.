@@ -2,12 +2,12 @@ const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
-const getMembershipAndGroup = require("../../middlewares/userAndGroup");
+const getUserOrMembershipOrGroup = require("../../middlewares/userAndGroup");
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 const User = require('../../models/userModel');
 
-router.get('/:groupId/requests', ensureAuth, getMembershipAndGroup, async(req, res) => {
+router.get('/:groupId/requests', ensureAuth, getUserOrMembershipOrGroup, async(req, res) => {
     try{
         const user = await User.findById(req.user.id);
         const group = await req.targetGroup;
