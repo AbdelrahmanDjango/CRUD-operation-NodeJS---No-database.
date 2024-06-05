@@ -10,11 +10,11 @@ const groupSchema = new mongoose.Schema({
     ref: 'User',
     required : true,
   }, 
-  name: {
-    type: String, 
-    ref: 'User',
-    // alias : 'owner', // Alias method for only queries, not showing data.
-  },
+  // name: {
+  //   type: String, 
+  //   ref: 'User',
+  //   // alias : 'owner', // Alias method for only queries, not showing data.
+  // },
   privacyStatus : {
     type: String, 
     enum: ['public', 'private'], 
@@ -23,7 +23,7 @@ const groupSchema = new mongoose.Schema({
   postStatus : {
     type : String, 
     enum : ['pending', 'rejected', 'accepted'], 
-    default : 'accepted'
+    default : 'accepted',
   },
 }, { timestamps: true });
 

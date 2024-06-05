@@ -107,7 +107,7 @@ const Comment = require('../../models/commentModel');
 const Follow = require("../../models/followModel");
 
 
-router.post('/posts/:postId/comment/create', ensureAuth, getPost, async(req, res) => {
+router.post('/posts/:postId/comment/create', ensureAuth(), getPost, async(req, res) => {
     try{
         const post = await req.targetPost
         const user = await User.findById(req.user.id);

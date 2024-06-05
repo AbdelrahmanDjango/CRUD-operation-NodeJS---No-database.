@@ -33,21 +33,20 @@
 const express = require('express');
 const Joi = require('joi');
 const ensureAuth = require('../../../middlewares/auth');
-const getUserOrMembershipOrGroup = require('../../../middlewares/userAndGroup');
 const User = require('../../../models/userModel');
 const Post = require('../../../models/postModel');
 const Follow = require('../../../models/followModel');
 const router = express.Router();
 
 
-router.get('/:userId', ensureAuth, getUserOrMembershipOrGroup, async (req, res) => {
+router.get('/:userId', ensureAuth(), async (req, res) => {
     try {
-        const user = await req.targetUser;
+        const user = await User.findById(req.params.userId);
 
         if (user.privacy === 'public') {
             const posts = await Post.find({ userId: req.params.userId });
 
-            if (!posts.length) {
+            if (posts.length > 0){
                 return res.status(400).json({ msg: `User with ID: ${user.id} has no posts.` });
             }
 
@@ -59,7 +58,7 @@ router.get('/:userId', ensureAuth, getUserOrMembershipOrGroup, async (req, res) 
             } else {
                 const posts = await Post.find({ userId: req.params.userId });
 
-                if (!posts.length) {
+                if (posts.length > 0){
                     return res.status(400).json({ msg: `User with ID: ${user.id} has no posts.` });
                 }
 

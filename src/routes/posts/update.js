@@ -54,7 +54,7 @@ const Post = require('../../models/postModel');
 const User = require('../../models/userModel');
 const router = express.Router();
 
-router.put('/update/:postId', ensureAuth, getPost, async (req, res) => {
+router.put('/update/:postId', ensureAuth(), getPost, async (req, res) => {
     try {
         const post = await req.targetPost;
 

@@ -47,14 +47,15 @@
 const express = require("express");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
-const getUserOrMembershipOrGroup = require("../../middlewares/userAndGroup");
 const User = require("../../models/userModel");
 const Follow = require("../../models/followModel");
 
-router.delete('/:userId/unfollow', ensureAuth, getUserOrMembershipOrGroup, async (req, res) =>{
+router.delete('/:userId/unfollow', ensureAuth(), async (req, res) =>{
     try {
-        const userToUnFollow = await req.targetUser;
-
+        const userToUnFollow = await User.findById(req.params.userId);
+        if(!userToUnFollow){
+            return res.status(404).send('User not found.')
+        }
         const currentUser = await User.findById(req.user.id);
         if (!currentUser) {
             return res.status(404).send('Current user not found.');

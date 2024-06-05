@@ -25,14 +25,14 @@
 const express = require("express");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");
-const getUserOrMembershipOrGroup = require("../../middlewares/userAndGroup");
 const User = require('../../models/userModel');
 const Follow = require('../../models/followModel');
 const mongoose = require('mongoose');
 
-router.post('/:userId/follow', ensureAuth, getUserOrMembershipOrGroup, async (req, res) => {
+router.post('/:userId/follow', ensureAuth(), async (req, res) => {
     try {
-        const userToFollow = await req.targetUser;
+        const userToFollow = await User.findById(req.params.userId);
+        if(!userToFollow) return res.status(404).send('User not found.')
 
         const currentUser = await User.findById(req.user.id);
         if (!currentUser) {

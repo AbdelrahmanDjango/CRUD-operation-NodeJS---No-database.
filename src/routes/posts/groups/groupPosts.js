@@ -8,27 +8,43 @@ const Group = require('../../../models/groupModel');
 const Membership = require('../../../models/membershipModel');
 const Post = require("../../../models/postModel");
 
-router.post('/:groupId/post/create', ensureAuth, getUserOrMembershipOrGroup, async(req, res) =>{
+router.post('/:groupId/post/create', ensureAuth(), async(req, res) =>{
     try{
-        const group = await req.targetGroup;
-        const user = await User.findById(req.user.id);
-        const post = await validationPost(req.body);
-        const isMembership = await Membership.findOne({groupId: group.id, userId: user.id, status: 'accepted'});
-        if(!isMembership){
-            return res.status(404).send(`You don\'t have access to doing posting in ${group.groupName} group, join group first.`)
-        }
+      const group = await Group.findById(req.params.groupId)
+      if(!group) return res.status.apply(404).send('Group not found.')
+      const user = await User.findById(req.user.id);
+      const isMembership = await Membership.findOne({groupId: group.id, userId: user.id, status: 'accepted'});
+      if(!isMembership){
+        return res.status(404).send(`You don\'t have access to doing posting in ${group.groupName} group, join group first.`)
+      }
+      const post = await validationPost(req.body);
+      if(group.postStatus === 'pending'){
         const newPost = new Post({
-            body: req.body.body,
-            name: user.name,
-            userId: user._id,
-            groupId: group.id,
-            // postRole: isMembership.role,
+          body: req.body.body,
+          name: user.name,
+          userId: user._id,
+          groupId: group.id,
+          postStatusGroup : group.postStatus,
+        });
+        const savePost = await newPost.save();
+        user.posts = user.posts || [];
+        user.posts.push(savePost);
+        await user.save();
+        return res.status(200).send('Post sent to the admins. Post pending now.')
+      }else{
+        const newPost = new Post({
+          body: req.body.body,
+          name: user.name,
+          userId: user._id,
+          groupId: group.id,
+          postStatusGroup : group.postStatus,
         });
         const savePost = await newPost.save();
         user.posts = user.posts || [];
         user.posts.push(savePost);
         await user.save();
         return res.status(200).send(savePost);
+      }
     }catch(err){
         console.log(err);
         return res.send('Server error.');

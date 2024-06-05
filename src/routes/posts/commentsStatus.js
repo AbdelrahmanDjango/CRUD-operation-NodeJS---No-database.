@@ -72,7 +72,7 @@ const getPost = require("../../middlewares/getPost");
 const User = require('../../models/userModel');
 const Post = require('../../models/postModel');
 
-router.patch('/:postId/comments/privacy/', ensureAuth, getPost, async(req, res) => {
+router.patch('/:postId/comments/privacy/', ensureAuth(), getPost, async(req, res) => {
     try {
         const post = await req.targetPost;
         

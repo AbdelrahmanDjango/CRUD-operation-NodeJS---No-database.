@@ -76,6 +76,8 @@ app.use('/groups', require('./src/routes/groups/requestJoin.js'));
 app.use('/groups', require('./src/routes/groups/editRole.js'));
 app.use('/groups', require('./src/routes/groups/editPostStatus.js'));
 app.use('/groups', require('./src/routes/groups/removeUser.js'));
+app.use('/groups', require('./src/routes/groups/leaveGroup.js'));
+app.use('/groups', require('./src/routes/groups/pendingPosts.js'));
 
 app.use(catchError);
 

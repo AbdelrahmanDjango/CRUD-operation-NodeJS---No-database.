@@ -91,7 +91,7 @@ const ensureAuth = require('../../middlewares/auth')
 const getPost = require('../../middlewares/getPost')
 const Post = require('../../models/postModel')
 const User = require('../../models/userModel')
-const Comment = require('../../models/commentModel')
+const Follow = require('../../models/followModel')
 
 router.get('/', async (req, res) => {
     try{
@@ -100,7 +100,7 @@ router.get('/', async (req, res) => {
         .populate('comments')
         // To get specify fields by populate, put fields name in Array
         // .populate('comments', ['name', 'comment', 'createdAt'])
-        if(!posts || posts.length === 0){
+        if (posts.length > 0){
             return res.status(400).json({msg : 'Posts not found.'})
         }else{
             return res.status(200).json(posts);
@@ -113,18 +113,31 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/:postId', getPost, async(req, res) => {
-    try{
+router.get('/:postId', ensureAuth(), getPost, async (req, res) => {
+    try {
+        // Posts are opened for all users, geust or authenticated. But if posts are private; user must be an authenticated.
         const post = await req.targetPost;
-        if(post.privacy === 'public'){
-            return res.status(200).json(post)
-        }else{
-            return res.status(400).send('This account is private. Sing up and follow him.')
-        };
-    }catch(err){
-        console.log(err);
-        res.send('Server error.')
+        if (post.privacy === 'public') {
+            return res.status(200).json(post);
+        } else {
+            // Check authorization if post are private. 
+            const user = await User.findById(req.user.id);
+            if(!user) {
+                return res.status(403).send('This account is private. Sign up and follow the user.');
+            };
+
+            const existingFollow = await Follow.findOne({ user: post.userId, follower: req.user.id, status: 'accepted' });
+            if(existingFollow) {
+                return res.status(200).json(post);
+            }else {
+                return res.status(403).send('Post is not available for you. Follow the user first.');
+            }
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error.');
     }
-})
+});
+
 
 module.exports = router;

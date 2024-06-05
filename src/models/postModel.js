@@ -15,12 +15,17 @@ const postSchema = new mongoose.Schema({
     type: String, 
     ref: 'Group',
   },
-  postRole: {
-    type: String, 
-    enum: ['admin', 'user'], 
-    default: 'user',
-    ref: 'Group', 
+  postStatusGroup: {
+    type: String,
+    enum: ['pending', 'rejected', 'accepted'],
+    default: 'accepted',
   },
+  // postRole: {
+  //   type: String, 
+  //   enum: ['admin', 'user'], 
+  //   default: 'user',
+  //   ref: 'Group', 
+  // },
   commentsStatus: { 
     type: String, 
     enum: ['closedForAll', 'openedForAll', 'openedForFollowers'], 

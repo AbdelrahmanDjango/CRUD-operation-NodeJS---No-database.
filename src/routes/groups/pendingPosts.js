@@ -6,8 +6,9 @@ const getUserOrMembershipOrGroup = require("../../middlewares/userAndGroup");
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 const User = require('../../models/userModel');
+const Post = require("../../models/postModel");
 
-router.get('/:groupId/requests', ensureAuth(), async(req, res) => {
+router.get('/:groupId/pending_posts', ensureAuth(), async(req, res) => {
     try{
         const groupOwner = await User.findById(req.user.id);
         const isAdmin = await Membership.findOne({userId : req.user.id, groupId: req.params.groupId, role : 'admin'})
@@ -18,19 +19,19 @@ router.get('/:groupId/requests', ensureAuth(), async(req, res) => {
         if((groupOwner.id !== group.userId && !isAdmin) || (groupOwner.id !== group.userId && !isAdmin)){
             return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };
-        const joinRequests = await Membership.find({ groupId: group.id, status: 'pending' });
-        if(!joinRequests.length) { 
-            return res.status(404).send('No pending join requests.');
+        const pendingPosts = await Post.find({ groupId: req.params.groupId, postStatusGroup: 'pending' });
+        if(pendingPosts.length > 0) { 
+            return res.status(200).json({ pendingPosts : pendingPosts });
         }
-        return res.status(200).json({ joinRequests : joinRequests });
+        return res.status(404).send('No pending posts requests.');
     }catch(err){
         console.log(err);
         return res.send('Server error.')
     }
 });
 
-// Group owner  and admin.
-router.patch('/:groupId/:userId/response', ensureAuth(), async(req, res) => {
+
+router.patch('/:groupId/pending_posts/:postId/response', ensureAuth(), async(req, res) => {
     try{
         const groupOwner = await User.findById(req.user.id);
         const isAdmin = await Membership.findOne({userId : req.user.id, groupId: req.params.groupId, role : 'admin'})
@@ -41,18 +42,18 @@ router.patch('/:groupId/:userId/response', ensureAuth(), async(req, res) => {
         if((groupOwner.id !== group.userId && !isAdmin) || (groupOwner.id !== group.userId && !isAdmin)){
             return res.status(403).send('Access denied. Only the group owner or an admin can perform this action.');
         };
-        const joinRequest = await Membership.findOne({userId : req.params.userId, groupId : group.id, status : 'pending'});
-        if(!joinRequest){
-            return res.status(400).send('There is no join request.');
+        const pendingPost = await Post.findOne({groupId : req.params.groupId, _id : req.params.postId, postStatusGroup : 'pending'});
+        if(!pendingPost){
+            return res.status(400).send('No pending post with this ID.');
         }else{
             const response = await validationResponse(req.body);
             if(response.status === 'rejected'){
-                await Membership.findOneAndDelete({userId : req.params.userId, groupId: group.id, status : 'pending'});
-                return res.status(200).send(`Join request ${response.status}.`)
+                await Post.findOneAndDelete({groupId : req.params.groupId, _id: req.params.postId, postStatusGroup : 'pending'});
+                return res.status(200).send(`Post ${response.status} successfully.`)
             }else{
-                joinRequest.status = response.status
-                await joinRequest.save();
-                return res.status(200).send(`Follow request ${response.status}.`);
+                pendingPost.postStatusGroup = response.status
+                await pendingPost.save();
+                return res.status(200).send(`Post ${response.status}.`);
             }
         }
         
@@ -62,12 +63,13 @@ router.patch('/:groupId/:userId/response', ensureAuth(), async(req, res) => {
     }
 });
 
-async function validationResponse(reqeustJoin) {
+
+async function validationResponse(pendingPost) {
     const schema = Joi.object({
       status : Joi.string().valid('accepted', 'rejected').required(),
     });
     try {
-      return await schema.validateAsync(reqeustJoin);
+      return await schema.validateAsync(pendingPost);
     } catch (err) {
       throw err;
     }

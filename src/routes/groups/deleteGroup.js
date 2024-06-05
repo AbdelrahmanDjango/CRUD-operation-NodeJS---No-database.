@@ -6,7 +6,7 @@ const getUserOrMembershipOrGroup = require("../../middlewares/userAndGroup");
 const User = require('../../models/userModel');
 const Membership = require('../../models/membershipModel');
 
-router.delete('/:groupId/delete', ensureAuth, getUserOrMembershipOrGroup, async(req, res) =>{
+router.delete('/:groupId/delete', ensureAuth(), getUserOrMembershipOrGroup, async(req, res) =>{
     try{
         const groupOwner = await User.findById(req.user.id);
         const group = await req.targetGroup;

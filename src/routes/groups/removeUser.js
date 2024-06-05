@@ -8,7 +8,7 @@ const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 
 // Group owner  and admin.
-router.delete('/:groupId/:userId/delete', ensureAuth, getUserOrMembershipOrGroup, async(req, res) => {
+router.delete('/:groupId/:userId/delete', ensureAuth(), getUserOrMembershipOrGroup, async(req, res) => {
     try{
         const groupOwner = await User.findById(req.user.id);
         const isAdmin = await Membership.findOne({userId : req.user.id, groupId: req.params.groupId, role : 'admin'})

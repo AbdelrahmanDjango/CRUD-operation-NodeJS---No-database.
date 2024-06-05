@@ -9,17 +9,21 @@ const getUserOrMembershipOrGroup = async (req, res, next) => {
             console.log('User not found');
             return res.status(400).send('User not found.');
         }
+
         const group = await Group.findById(req.params.groupId);
-        if (!group) {
+        if(!group) {
             console.log('Group not found');
             return res.status(400).send('Group not found.');
         }
-        
+
         const isMembership = await Membership.findOne({
             userId: req.params.userId,
             groupId: req.params.groupId,
             status: 'accepted',
         });
+        if(!isMembership){
+            return res.status(404).send(`You are not a membership.`)
+        };
 
         req.targetUser = user;
         req.targetGroup = group;

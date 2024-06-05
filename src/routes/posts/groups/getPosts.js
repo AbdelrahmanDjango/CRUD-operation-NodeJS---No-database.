@@ -7,28 +7,93 @@ const User = require('../../../models/userModel')
 const Membership = require('../../../models/membershipModel')
 const Group = require('../../../models/groupModel')
 
-router.get('/:groupId/:userId/posts', ensureAuth, getUserOrMembershipOrGroup, async(req, res) =>{
+router.get('/:groupId/posts', ensureAuth(), async(req, res) =>{
     try{
-        const group = await req.targetGroup;
-        const user = await User.findById(req.user.id);
-        const isMembership = await Membership.findOne({groupId: group.id, userId: user.id, status: 'accepted'});
-        if(!isMembership){
-            return res.status(404).send(`You don\'t have access to doing posting in ${group.groupName} group, join group first.`)
-        };
-        const userPosts = await User.findById(req.params.userId);
-        const isUserMembership = await Membership.findOne({groupId: group.id, userId: user.id, status: 'accepted'});
-        if(!isUserMembership){
-            return res.status(404).send(`You don\'t have access to doing posting in ${group.groupName} group, join group first.`)
-        };
-        const posts = await Post.find({userId: userPosts.id, groupId: group.id});
-        if(!posts){
-            return res.status(`This user has no posts in ${group.groupName} group`);
-        };
-        return res.status(200).json({Posts: posts});
+        const group = await Group.findById(req.params.groupId);
+        const userAuth = await User.findById(req.user.id);
+        const groupOwner = await Group.findOne({userId : userAuth.id});
+        const isMembership = await Membership.findOne({userId: userAuth.id, groupId: group.id})
+        if(group.privacyStatus === 'private'){
+            if(groupOwner || isMembership){
+                const posts = await Post.find({groupId: group.id, postStatusGroup: 'accepted'});
+                if (posts.length > 0){
+                    return res.status(200).json({ Posts: posts });
+                }else{
+                    return res.status(404).send('There are no posts');
+                }
+            }else{
+                return res.status(400).send(`${group.groupName} is private group. Join group first.`)
+            }
+        }
+
     }catch(err){
         console.log(err);
         return res.send('Server error.');
     };
+
 });
+
+
+router.get('/:groupId/posts/:postId', ensureAuth(), async(req, res) =>{
+    try{
+        const group = await Group.findById(req.params.groupId);
+        const userAuth = await User.findById(req.user.id);
+        const groupOwner = await Group.findOne({userId : userAuth.id});
+        const isMembership = await Membership.findOne({userId: userAuth.id, groupId: group.id})
+        if(group.privacyStatus === 'private'){
+            if(groupOwner || isMembership){
+                const post = await Post.findById({_id: req.params.postId, groupId: group.id, postStatusGroup: 'accepted'});
+                if (post){
+                    return res.status(200).json({ Posts: post });
+                }else{
+                    return res.status(404).send('There are no posts');
+                }
+            }else{
+                return res.status(400).send(`${group.groupName} is private group. Join group first.`)
+            }
+        }
+
+    }catch(err){
+        console.log(err);
+        return res.send('Server error.');
+    };
+
+})
+
+
+router.get('/:groupId/:userId/posts/', ensureAuth(), async(req, res) =>{
+    try{
+        const group = await Group.findById(req.params.groupId);
+        const userAuth = await User.findById(req.user.id);
+        const targetUser = await User.findById(req.params.userId);
+        const groupOwner = await Group.findOne({userId : userAuth.id});
+        const isMembership = await Membership.findOne({userId: userAuth.id, groupId: group.id})
+        if(group.privacyStatus === 'private'){
+            if(groupOwner || isMembership){
+                const posts = await Post.find({ userId: req.params.userId });
+                if(posts.length > 0){
+                    return res.status(200).json({ Posts: posts });
+                }else{
+                    return res.status(404).send('No posts for this user.');
+                }
+            }else{
+                return res.status(400).send(`${group.groupName} is private group. Join group first.`)
+            }
+        }
+
+    }catch(err){
+        console.log(err);
+        return res.send('Server error.');
+    };
+
+})
+    
+        
+
+        
+        
+
+    
+
 
 module.exports = router;

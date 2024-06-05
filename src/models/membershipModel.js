@@ -6,10 +6,10 @@ const membershipSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  name: {
-    type: String,
-    ref: 'User',
-  },
+  // name: {
+  //   type: String,
+  //   ref: 'User',
+  // },
   role : {
     type : String, 
     enum : ['user', 'admin'], 

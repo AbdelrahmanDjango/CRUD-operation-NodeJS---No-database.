@@ -93,7 +93,7 @@ router.get('/', ensureAuth(), async(req, res) => {
 
         const posts = await Post.find({ userId: { $in: followingIds }}).sort({createdAt : -1})
 
-        if (!posts.length) {
+        if (posts.length > 0) {
             return res.status(400).send(`No posts found for the following users.`);
         }
         return res.status(200).json({Post_Followings : posts});

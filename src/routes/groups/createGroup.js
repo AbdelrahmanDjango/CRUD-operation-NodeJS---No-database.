@@ -6,7 +6,7 @@ const User = require('../../models/userModel');
 const Group = require('../../models/groupModel');
 const Membership = require('../../models/membershipModel');
 
-router.post('/create', ensureAuth, async(req, res) => {
+router.post('/create', ensureAuth(), async(req, res) => {
     try{
         const user = await User.findById(req.user.id);
         const group = await validationGroup(req.body);
