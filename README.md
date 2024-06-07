@@ -1,5 +1,5 @@
 
-# Social network with good features.
+# Social network with advanced features.
 
 
 
