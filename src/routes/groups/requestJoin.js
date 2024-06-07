@@ -1,3 +1,103 @@
+/**
+ * @swagger
+ * /groups/{groupId}/requests:
+ *   get:
+ *     summary: Retrieve join requests for a group
+ *     description: Retrieve all pending join requests for a specified group.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the group to retrieve join requests for
+ *     responses:
+ *       '200':
+ *         description: A list of pending join requests
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 joinRequests:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Membership'
+ *       '403':
+ *         description: Access denied - Only the group owner or an admin can perform this action
+ *       '404':
+ *         description: No pending join requests found
+ *       '500':
+ *         description: Internal server error
+ *
+ * /groups/{groupId}/{userId}/response:
+ *   patch:
+ *     summary: Respond to a join request
+ *     description: Accept or reject a join request for a specified group.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the group
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the user whose join request is being responded to
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/JoinRequestResponse'
+ *     responses:
+ *       '200':
+ *         description: Successfully responded to the join request
+ *       '400':
+ *         description: No join request found or invalid response status
+ *       '403':
+ *         description: Access denied - Only the group owner or an admin can perform this action
+ *       '500':
+ *         description: Internal server error
+ *
+ * components:
+ *   schemas:
+ *     Membership:
+ *       type: object
+ *       properties:
+ *         userId:
+ *           type: string
+ *         groupId:
+ *           type: string
+ *         status:
+ *           type: string
+ *           enum: [pending, accepted, rejected]
+ *       required:
+ *         - userId
+ *         - groupId
+ *         - status
+ *     JoinRequestResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *           enum: [accepted, rejected]
+ *       required:
+ *         - status
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();

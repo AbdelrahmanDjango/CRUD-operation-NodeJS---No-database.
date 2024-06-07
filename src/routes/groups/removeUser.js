@@ -1,3 +1,101 @@
+/**
+ * @swagger
+ * /groups/{groupId}/{userId}/delete:
+ *   delete:
+ *     summary: Delete a user from a group
+ *     description: >
+ *       Only the group owner or an admin can delete a user from the group. 
+ *       If the group owner deletes themselves and there are other members, the first member becomes the new owner.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the group
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user to delete
+ *     responses:
+ *       '200':
+ *         description: Successful operation
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "You leaved the group. Group deleted successfully."
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "You can't remove admins."
+ *       '403':
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Access denied. Only the group owner or an admin can perform this action."
+ *       '404':
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "User not exists."
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Server error."
+ * 
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         name:
+ *           type: string
+ *     Group:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         name:
+ *           type: string
+ *         userId:
+ *           type: string
+ *     Membership:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         groupId:
+ *           type: string
+ *         role:
+ *           type: string
+ *         status:
+ *           type: string
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();

@@ -17,10 +17,14 @@ const swaggerOptions = {
     },
   }, 
   
-  apis : ['./src/routes/posts/*.js', 
+  apis : [
+    './src/routes/posts/*.js', 
+    './src/routes/posts/groups/*.js', 
+    './src/routes/posts/userPosts/*.js', 
   './src/routes/auth/*.js',
   './src/routes/followers/*.js',
-  './src/routes/settings/*.js',
+  './src/routes/accountSettings/*.js',
+  './src/routes/groups/*.js',
 ]
 }
 

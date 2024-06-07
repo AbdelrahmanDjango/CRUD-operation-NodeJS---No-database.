@@ -1,3 +1,116 @@
+/**
+ * @swagger
+ * /groups/{groupId}/{userId}/role/edit:
+ *   patch:
+ *     summary: Edit the role of a group member
+ *     description: >
+ *       Only the group owner can edit the role of a group member.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the group
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user whose role is to be edited
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: ['user', 'admin']
+ *                 example: "admin"
+ *             required:
+ *               - role
+ *     responses:
+ *       '200':
+ *         description: Role edited successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "You gave {userId} a new role in {groupName} group: {role}'s role."
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               examples:
+ *                 GroupNotFound:
+ *                   value: "Group not found."
+ *                 UserNotFound:
+ *                   value: "User not found."
+ *       '403':
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Access denied. Only the group owner can perform this action."
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Server error."
+ *
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         name:
+ *           type: string
+ *     Group:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         groupName:
+ *           type: string
+ *         name:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         postStatus:
+ *           type: string
+ *         privacyStatus:
+ *           type: string
+ *     Membership:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         groupId:
+ *           type: string
+ *         role:
+ *           type: string
+ *         status:
+ *           type: string
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();

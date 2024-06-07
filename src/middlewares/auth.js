@@ -28,7 +28,7 @@ function ensureAuth(givenRoles) {
       req.user = decodedToken;
 
       next();
-    } catch (e) {
+    }catch(e) {
       console.log(e);
       return res.status(403).send("invalid authorization");
     }

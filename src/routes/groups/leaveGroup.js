@@ -1,3 +1,56 @@
+/**
+ * @swagger
+ * /groups/{groupId}/{userId}/leave:
+ *   delete:
+ *     summary: Leave a group
+ *     description: >
+ *       Users can leave a group, which involves removing their membership from the group.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the group to leave
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user who wants to leave the group
+ *     responses:
+ *       '200':
+ *         description: Successfully left the group
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "You left {groupName} successfully."
+ *       '400':
+ *         description: Invalid Authorization
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Invalid Authorization."
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Server error."
+ *
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();

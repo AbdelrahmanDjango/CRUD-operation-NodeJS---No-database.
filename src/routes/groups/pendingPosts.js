@@ -1,3 +1,99 @@
+/**
+ * @swagger
+ * /groups/{groupId}/pending_posts:
+ *   get:
+ *     summary: Retrieve pending posts for a group
+ *     description: Retrieves all posts in a specified group that are pending approval.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the group to retrieve pending posts from
+ *     responses:
+ *       '200':
+ *         description: List of pending posts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 pendingPosts:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Post'
+ *       '404':
+ *         description: No pending posts found
+ *       '403':
+ *         description: Access denied - only group owner or admin can access this endpoint
+ *       '500':
+ *         description: Internal server error
+ *
+ * /groups/{groupId}/pending_posts/{postId}/response:
+ *   patch:
+ *     summary: Respond to a pending post request
+ *     description: Responds to a pending post request by either accepting or rejecting it.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the group
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the post to respond to
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PostResponse'
+ *     responses:
+ *       '200':
+ *         description: Successfully responded to the post request
+ *       '400':
+ *         description: No pending post found with this ID
+ *       '403':
+ *         description: Access denied - only group owner or admin can perform this action
+ *       '500':
+ *         description: Internal server error
+ *
+ * components:
+ *   schemas:
+ *     Post:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *         content:
+ *           type: string
+ *         postStatusGroup:
+ *           type: string
+ *           enum: [pending, accepted, rejected]
+ *     PostResponse:
+ *       type: object
+ *       properties:
+ *         status:
+ *           type: string
+ *           enum: [accepted, rejected]
+ *       required:
+ *         - status
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();

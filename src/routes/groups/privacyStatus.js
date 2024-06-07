@@ -1,3 +1,52 @@
+/**
+ * @swagger
+ * /groups/{groupId}/privacy:
+ *   patch:
+ *     summary: Update the privacy status of a group
+ *     description: Allows the group owner to update the privacy status of the group.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the group whose privacy status needs to be updated
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/GroupPrivacy'
+ *     responses:
+ *       '200':
+ *         description: Successfully updated the privacy status of the group
+ *       '400':
+ *         description: The provided privacy status is the same as the current status
+ *       '403':
+ *         description: Access denied - only the group owner can update the privacy status
+ *       '500':
+ *         description: Internal server error
+ *
+ * components:
+ *   schemas:
+ *     GroupPrivacy:
+ *       type: object
+ *       properties:
+ *         privacy:
+ *           type: string
+ *           enum: [public, private]
+ *           description: The new privacy status for the group
+ *       required:
+ *         - privacy
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();

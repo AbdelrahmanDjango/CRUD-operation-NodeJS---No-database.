@@ -1,3 +1,93 @@
+/**
+ * @swagger
+ * /groups/{groupId}/join:
+ *   post:
+ *     summary: Join a group
+ *     description: >
+ *       Users can join public groups directly, but need to request to join private groups. The group owner cannot join their own group.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the group to join
+ *     responses:
+ *       '200':
+ *         description: Successfully joined the group
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Joined {groupName} successfully."
+ *       '400':
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               examples:
+ *                 AlreadyInGroup:
+ *                   value: "You are already in this group."
+ *                 JoinRequestPending:
+ *                   value: "Request join already sent."
+ *                 UnexpectedError:
+ *                   value: "Un expected error."
+ *       '404':
+ *         description: Group not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Group not found."
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Server error."
+ *
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         name:
+ *           type: string
+ *     Group:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         groupName:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         privacyStatus:
+ *           type: string
+ *     Membership:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         groupId:
+ *           type: string
+ *         status:
+ *           type: string
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 const express = require("express");
 const router = express.Router();
 const ensureAuth = require("../../middlewares/auth");

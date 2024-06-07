@@ -1,3 +1,85 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Posts
+ *   description: Operations related to creating posts within groups.
+ */
+
+/**
+ * @swagger
+ * /groups/{groupId}/post/create:
+ *   post:
+ *     summary: Create a new post in a group
+ *     description: Allows a user who is a member of a group to create a post. The post will be reviewed by admins if the group's post status is 'pending'.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the group where the post will be created
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             body:
+ *               type: string
+ *               description: Content of the post
+ *         description: Content of the post to be created
+ *     responses:
+ *       '200':
+ *         description: Post created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       '404':
+ *         description: Group not found or user not a member of the group
+ *       '500':
+ *         description: Server error
+ *
+ * components:
+ *   schemas:
+ *     Post:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: Unique identifier for the post
+ *         body:
+ *           type: string
+ *           description: Content of the post
+ *         name:
+ *           type: string
+ *           description: Name of the user who created the post
+ *         userId:
+ *           type: string
+ *           description: ID of the user who created the post
+ *         groupId:
+ *           type: string
+ *           description: ID of the group where the post belongs
+ *         postStatusGroup:
+ *           type: string
+ *           description: Status of the post within the group (e.g., 'pending')
+ *       required:
+ *         - _id
+ *         - body
+ *         - name
+ *         - userId
+ *         - groupId
+ *         - postStatusGroup
+ *
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();

@@ -1,3 +1,106 @@
+/**
+ * @swagger
+ * /groups/{groupId}/post_status/edit:
+ *   patch:
+ *     summary: Edit the post status of a group
+ *     description: >
+ *       Only the group owner or an admin can edit the post status of the group.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: groupId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the group whose post status is to be edited
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               postStatus:
+ *                 type: string
+ *                 enum: ['pending', 'accepted']
+ *                 example: "pending"
+ *             required:
+ *               - postStatus
+ *     responses:
+ *       '200':
+ *         description: Post status edited successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Post status in {groupName} group is {postStatus} now.\nChanged by {userEmail}."
+ *       '403':
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Access denied. Only the group owner or an admin can perform this action."
+ *       '404':
+ *         description: Group not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Group not found."
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *               example: "Server error."
+ *
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         name:
+ *           type: string
+ *     Group:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         groupName:
+ *           type: string
+ *         name:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         postStatus:
+ *           type: string
+ *         privacyStatus:
+ *           type: string
+ *     Membership:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         groupId:
+ *           type: string
+ *         role:
+ *           type: string
+ *         status:
+ *           type: string
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
 const express = require("express");
 const Joi = require("joi");
 const router = express.Router();
